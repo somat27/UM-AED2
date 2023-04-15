@@ -1,0 +1,233 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <time.h>
+#include <unistd.h>
+
+#include "estruturas.h"
+#include "menus.h"
+
+void Menu_Principal(){
+	int opcao = 1;
+    int tecla;
+
+    while (1) {
+        system("cls");
+        ASCII_Print(1); 
+        printf("\n\n");
+        printf("\t\t\t\t%s  Utentes\n", opcao == 1 ? ">": " ");
+        printf("\t\t\t\t%s  Medicos\n", opcao == 2 ? ">": " ");
+        printf("\n\t\t\t    %s  Fechar Programa\n", opcao == 3 ? ">": " ");
+
+        tecla = getch();
+
+        if (tecla == 224) {
+            tecla = getch();
+
+            switch (tecla) {
+                case 72: 
+                    opcao = opcao == 1 ? 3 : opcao - 1; 
+                    break;
+                case 80: 
+                    opcao = opcao == 3 ? 1 : opcao + 1;
+                    break;
+            }
+        } else if (tecla == 13) {
+        	switch (opcao) {
+                case 1:
+                    Menu_Utentes(); 
+                    break;
+                case 2: 
+                    Menu_Medicos(); 
+                    break;
+                case 3: 
+                    Sair_Programa(); 
+                    break;
+            }
+            break;
+        }
+    }
+}
+
+void ASCII_Print(int a){
+	fflush(stdin);
+	printf("\n");
+	if(a==1){
+		printf("\n\t\t\t ¦¦¦¦¦¦¦  ¦¦¦¦¦¦   ¦¦¦¦¦  ¦¦    ¦¦");
+		printf("\n\t\t\t ¦¦      ¦¦       ¦¦   ¦¦ ¦¦    ¦¦");
+		printf("\n\t\t\t ¦¦¦¦¦¦¦ ¦¦   ¦¦¦ ¦¦¦¦¦¦¦ ¦¦    ¦¦");
+		printf("\n\t\t\t      ¦¦ ¦¦    ¦¦ ¦¦   ¦¦ ¦¦    ¦¦");
+		printf("\n\t\t\t ¦¦¦¦¦¦¦  ¦¦¦¦¦¦  ¦¦   ¦¦  ¦¦¦¦¦¦ ");
+		printf("\n\t\t    Sistema de Gestão e Atendimento aos Utentes.");
+	}else if(a==2){
+		printf("\n\t ¦¦    ¦¦ ¦¦¦¦¦¦¦¦ ¦¦¦¦¦¦¦ ¦¦¦    ¦¦ ¦¦¦¦¦¦¦¦ ¦¦¦¦¦¦¦ ¦¦¦¦¦¦¦ ");
+		printf("\n\t ¦¦    ¦¦    ¦¦    ¦¦      ¦¦¦¦   ¦¦    ¦¦    ¦¦      ¦¦      ");
+		printf("\n\t ¦¦    ¦¦    ¦¦    ¦¦¦¦¦   ¦¦ ¦¦  ¦¦    ¦¦    ¦¦¦¦¦   ¦¦¦¦¦¦¦ ");
+		printf("\n\t ¦¦    ¦¦    ¦¦    ¦¦      ¦¦  ¦¦ ¦¦    ¦¦    ¦¦           ¦¦ ");
+		printf("\n\t  ¦¦¦¦¦¦     ¦¦    ¦¦¦¦¦¦¦ ¦¦   ¦¦¦¦    ¦¦    ¦¦¦¦¦¦¦ ¦¦¦¦¦¦¦ ");
+    	printf("\n\t\t\t\t Menu Utentes");
+	}else if(a==3){
+		printf("\n\t     ¦¦¦    ¦¦¦ ¦¦¦¦¦¦¦ ¦¦¦¦¦¦  ¦¦  ¦¦¦¦¦¦  ¦¦¦¦¦¦  ¦¦¦¦¦¦¦ ");
+		printf("\n\t     ¦¦¦¦  ¦¦¦¦ ¦¦      ¦¦   ¦¦ ¦¦ ¦¦      ¦¦    ¦¦ ¦¦      ");
+		printf("\n\t     ¦¦ ¦¦¦¦ ¦¦ ¦¦¦¦¦   ¦¦   ¦¦ ¦¦ ¦¦      ¦¦    ¦¦ ¦¦¦¦¦¦¦ ");
+		printf("\n\t     ¦¦  ¦¦  ¦¦ ¦¦      ¦¦   ¦¦ ¦¦ ¦¦      ¦¦    ¦¦      ¦¦ ");
+		printf("\n\t     ¦¦      ¦¦ ¦¦¦¦¦¦¦ ¦¦¦¦¦¦  ¦¦  ¦¦¦¦¦¦  ¦¦¦¦¦¦  ¦¦¦¦¦¦¦ ");
+    	printf("\n\t\t\t\t Menu Medicos");
+	}
+	printf("\n");
+}
+
+void Menu_Utentes(){
+	int opcao = 1;
+    int tecla;
+
+    while (1) {
+        system("cls");
+        ASCII_Print(2);
+        printf("\n\n");
+        printf("\t%s  Atendimento ao Utente\n", opcao == 1 ? ">": " ");
+        printf("\t%s  Criar Utente\n", opcao == 2 ? ">": " ");
+        printf("\t%s  Editar Utente \n", opcao == 3 ? ">": " ");
+        printf("\t%s  Consultar Utente\n", opcao == 4 ? ">": " ");
+        printf("\t%s  Remover Utente\n", opcao == 5 ? ">": " ");
+        printf("\t%s  Listar Utentes\n", opcao == 6 ? ">": " ");
+        printf("\n\t%s  Menu Inicial\n", opcao == 7 ? ">": " ");
+
+        tecla = getch();
+        if (tecla == 224) { 
+            tecla = getch();
+            switch (tecla) {
+                case 72:
+                    opcao = opcao == 1 ? 7 : opcao - 1; 
+                    break;
+                case 80: 
+                    opcao = opcao == 7 ? 1 : opcao + 1;
+                    break;
+            }
+        } else if (tecla == 13) {
+            switch(opcao){
+            	case 1:
+            		Menu_Atendimento();
+            		break;
+            	case 2:
+            		Criar_Utente();
+            		break;
+            	case 3:
+            		Editar_Utente();
+            		break;
+            	case 4:
+            		Consultar_Utente();
+            		break;
+            	case 5:
+            		Remover_Utente();
+            		break;
+            	case 6:
+            		Listar_Utentes();
+            		break;
+            	case 7:
+            		Menu_Principal();
+            		break;
+			}
+            break;
+        }
+    }
+}
+
+void Menu_Medicos(){
+	int opcao = 1;
+    int tecla;
+
+    while (1) {
+        system("cls");
+        ASCII_Print(3);
+        printf("\n\n");
+        printf("\t%s  Criar Medico\n", opcao == 1 ? ">": " ");
+        printf("\t%s  Editar Medico \n", opcao == 2 ? ">": " ");
+        printf("\t%s  Consultar Medico\n", opcao == 3 ? ">": " ");
+        printf("\t%s  Remover Medico\n", opcao == 4 ? ">": " ");
+        printf("\t%s  Listar Medicos\n", opcao == 5 ? ">": " ");
+        printf("\n\t%s  Menu Inicial\n", opcao == 6 ? ">": " ");
+
+        tecla = getch();
+        if (tecla == 224) { 
+            tecla = getch();
+            switch (tecla) {
+                case 72:
+                    opcao = opcao == 1 ? 6 : opcao - 1; 
+                    break;
+                case 80: 
+                    opcao = opcao == 6 ? 1 : opcao + 1;
+                    break;
+            }
+        } else if (tecla == 13) {
+            switch(opcao){
+            	case 1:
+            		Criar_Medico();
+            		break;
+            	case 2:
+            		Editar_Medico();
+            		break;
+            	case 3:
+            		Consultar_Medico();
+            		break;
+            	case 4:
+            		Remover_Medico();
+            		break;
+            	case 5:
+            		Listar_Medicos();
+            		break;
+            	case 6:
+            		Menu_Principal();
+            		break;
+			}
+            break;
+        }
+    }
+}
+
+void Menu_Atendimento(){
+	Medico* medico = NULL; // declarar ponteiro fora do loop
+	medico = (Medico*) malloc(sizeof(Medico));
+	
+	int opcao = 1;
+    int tecla;
+
+    while (1) {
+        system("cls");
+        ASCII_Print(2);
+        printf("\n\n");
+        printf("\t%s  Colocar na lista de espera\n", opcao == 1 ? ">": " ");
+        printf("\t%s  Remover da lista de espera \n", opcao == 2 ? ">": " ");
+        printf("\t%s  Ver lista de espera \n", opcao == 3 ? ">": " ");
+        printf("\n\t%s  Menu Utente\n", opcao == 4 ? ">": " ");
+
+        tecla = getch();
+        if (tecla == 224) { 
+            tecla = getch();
+            switch (tecla) {
+                case 72:
+                    opcao = opcao == 1 ? 4 : opcao - 1; 
+                    break;
+                case 80: 
+                    opcao = opcao == 4 ? 1 : opcao + 1;
+                    break;
+            }
+        } else if (tecla == 13) {
+            switch(opcao){
+            	case 1:
+            		Menu_Fila(&medico);
+            		break;
+            	case 2:
+            		
+            		break;
+            	case 3:
+            		Menu_Lista_Medico(&medico);
+            		break;
+            	case 4:
+            		free(medico);
+            		Menu_Utentes();
+            		break;
+			}
+            break;
+        }
+    }
+}

@@ -1,0 +1,9 @@
+void Menu_Principal();
+void ASCII_Print();
+void Menu_Utentes();
+void Menu_Medicos();
+void Menu_Lista();
+void Menu_Fila();
+void Menu_Remover_Fila();
+void Menu_Mostrar_Fila();
+void Menu_Atendimento();
