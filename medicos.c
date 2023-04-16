@@ -69,7 +69,6 @@ int Codigo_Medico(char* Nome_Medico){
 	return -1;
 }
 
-
 void Criar_Medico(){
 	system("CLS");
 	char nome[255];
@@ -96,15 +95,26 @@ void Consultar_Medico(){
 	char string[255];
 	printf("Nome do Medico: ");
 	gets(string);
-	char linha[100];
+	char linha[100],linha2[100];
     int i = 0;
     FILE* arquivo = fopen("medicos.txt", "r");
+    FILE* arquivo2 = fopen("utentes.txt", "r");
     while (fgets(linha, 100, arquivo) != NULL) {
-        char* nome = strtok(linha, ",");
-        char* codigo_str = strtok(NULL, "\n");
-		int num_int = atoi(codigo_str);
-        if(strcmp(string, nome)==0){
-        	printf("\n\nNome: %s, Codigo: %d", nome, num_int);
+        char* nome_medico = strtok(linha, ",");
+        char* codigo_medico = strtok(NULL, "\n");
+		int cod_medico = atoi(codigo_medico);
+        if(strcmp(string, nome_medico)==0){
+        	printf("\n\nMedico: %s, Codigo: %d\nLista de Utentes:", nome_medico, cod_medico);
+		    while (fgets(linha2, 100, arquivo2) != NULL) {
+		        char* nome_utente = strtok(linha2, ",");
+		        char* codigo_utente = strtok(NULL, ",");
+		        char* codigo_medico_utente = strtok(NULL, "\n");
+				int cod_utente = atoi(codigo_utente);
+				int cod_medico_utente = atoi(codigo_medico_utente);
+		        if(cod_medico == cod_medico_utente){
+		        	printf("\n Nome: %s, Codigo: %d", nome_utente, cod_utente);
+				}
+		    }
 		}
     }
     fclose(arquivo);

@@ -192,43 +192,82 @@ int Gerar_Codigo(){
     srand(time(NULL));
 
     int num_aleatorio, encontrou = 0;
-    char str_num[7]; // 6 d�gitos + \0
-    FILE *medico_file, *utente_file;
+    char str_num[7];
+    
+    FILE* arquivo = fopen("utentes.txt", "r");
+    char linha[100];
 
     do {
         encontrou = 0;
-        // Gera um n�mero aleat�rio no intervalo [100000, 999999]
         num_aleatorio = rand() % 999999 + 100000;
-        sprintf(str_num, "%d", num_aleatorio); //Para comparar a linha com o codigo visto que lemos a linha como CHAR
+        
+        while (fgets(linha, sizeof(linha), arquivo)) {
+        	char* nome_utente = strtok(linha, ",");
+	        char* codigo_utente = strtok(NULL, ",");
+	        char* codigo_medico = strtok(NULL, "\n");
+			int cod_utente = atoi(codigo_utente);
+			int cod_medico = atoi(codigo_medico);
+	        if (cod_utente == num_aleatorio || cod_medico == num_aleatorio) {
+	            encontrou = 1;
+	            break;
+	        }
+	    }
 
-        medico_file = fopen("medicos.txt", "r");
-        if (medico_file != NULL) {
-            char linha[100];
-            while (fgets(linha, sizeof(linha), medico_file)) {
-                if (strstr(linha, str_num) != NULL) {
-                    fclose(medico_file);
-                    encontrou = 1;
-                    break;
-                }
-            }
-            fclose(medico_file);
-        }
-
-        utente_file = fopen("utentes.txt", "r");
-        if (utente_file != NULL) {
-            char linha[100];
-            while (fgets(linha, sizeof(linha), utente_file)) {
-                if (strstr(linha, str_num) != NULL) {
-                    fclose(utente_file);
-                    encontrou = 1;
-                    break;
-                }
-            }
-            fclose(utente_file);
-        }
-
-        if(encontrou == 0)
-        	return num_aleatorio;
+        if(encontrou == 0){
+	    	fclose(arquivo);
+	    	return num_aleatorio;
+		}
 
     } while (1);
+}
+
+void Mudar_Medico_Utentes(char** nomes_utentes, char* nome_medico, int num_utentes){
+	int i, encontrou;
+	
+    FILE* arquivo = fopen("medicos.txt", "r");
+    FILE* arquivo2 = fopen("utentes.txt", "r");
+    FILE* arquivoTemp = fopen("temp.txt", "w");	
+    
+    char linha[100],linha2[100];
+    int cod_medico;
+    Utente utente;
+    
+    while (fgets(linha, 100, arquivo) != NULL) {
+        char* string = strtok(linha, ",");
+        char* codigo = strtok(NULL, "\n");
+        if(strcmp(string, nome_medico) == 0){
+			cod_medico = atoi(codigo);
+        	break;
+		}
+    }
+    fclose(arquivo);
+    
+    while (fgets(linha2, 100, arquivo2) != NULL) {
+    	encontrou = 0;
+        char* nome_utente = strtok(linha2, ",");
+        char* codigo_utente = strtok(NULL, ",");
+        char* codigo_medico_utente = strtok(NULL, "\n");
+        int cod_utente = atoi(codigo_utente);
+		int cod_medico_utente = atoi(codigo_medico_utente);
+		strcpy(utente.nome, nome_utente);
+		utente.codigo = cod_utente;
+		for(i=0;i<num_utentes;i++){
+			if(strcmp(nomes_utentes[i], nome_utente) == 0){
+				encontrou = 1;
+			}
+		}
+		if(encontrou){
+			utente.codigo_medico = cod_medico;
+			fprintf(arquivoTemp, "%s,%d,%d\n", utente.nome, utente.codigo, utente.codigo_medico);
+		}else{
+			utente.codigo_medico = cod_medico_utente;
+			fprintf(arquivoTemp, "%s,%d,%d\n", utente.nome, utente.codigo, utente.codigo_medico);
+		}
+		
+    }
+    
+    fclose(arquivo2);
+    fclose(arquivoTemp);
+    remove("utentes.txt");
+    rename("temp.txt", "utentes.txt");
 }

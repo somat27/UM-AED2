@@ -146,19 +146,29 @@ void Consultar_Utente(){
 	char string[255];
 	printf("Nome do Utente: ");
 	gets(string);
-	char linha[100];
+	char linha[100],linha2[100];
     int i = 0;
     FILE* arquivo = fopen("utentes.txt", "r");
+	FILE* arquivo2 = fopen("medicos.txt", "r");
     while (fgets(linha, 100, arquivo) != NULL) {
-        char* nome = strtok(linha, ",");
-        char* codigo_str = strtok(NULL, ",");
-        char* num_str = strtok(codigo_str, "\n");
-		int num_int = atoi(num_str);
-        if(strcmp(string, nome)==0){
-        	printf("\n\nNome: %s, Codigo: %d", nome, num_int);
+        char* nome_utente = strtok(linha, ",");
+        char* codigo_utente = strtok(NULL, ",");
+        char* codigo_medico_utente = strtok(NULL, "\n");
+		int cod_utente = atoi(codigo_utente);
+		int cod_medico_utente = atoi(codigo_medico_utente);
+        if(strcmp(string, nome_utente)==0){
+		    while (fgets(linha2, 100, arquivo2) != NULL) {
+		        char* nome_medico = strtok(linha2, ",");
+		        char* codigo_medico = strtok(NULL, "\n");
+				int cod_medico = atoi(codigo_medico);
+		        if(cod_medico==cod_medico_utente){
+		        	printf("\nUtente: %s, Codigo: %d\nMedico: %s, Codigo: %d", nome_utente, codigo_utente, nome_medico, cod_medico);
+				}
+		    }
 		}
     }
     fclose(arquivo);
+	fclose(arquivo2);
     getch();
     Menu_Utentes();
 }
@@ -191,4 +201,50 @@ void Listar_Utentes(){
     fclose(arquivo);
     getch();
     Menu_Utentes();
+}
+
+char** Verificar_Medico(int* num){
+    FILE* arquivo = fopen("utentes.txt", "r");
+    FILE* arquivo2 = fopen("medicos.txt", "r");
+    
+    char** nomes = (char**) malloc(sizeof(char*));
+    if (nomes == NULL) {
+        printf("Erro ao alocar memoria\n");
+        return NULL;
+    }
+    
+    char linha[100],linha2[100];
+    int i = 0, encontrou;
+    while (fgets(linha, 100, arquivo) != NULL) {
+	    encontrou = 0;
+        char* nome_utente = strtok(linha, ",");
+        char* codigo_utente = strtok(NULL, ",");
+        char* codigo_medico_utente = strtok(NULL, "\n");
+		int cod_utente = atoi(codigo_utente);
+		int cod_medico_utente = atoi(codigo_medico_utente);
+		
+		rewind(arquivo2); // Volta ao inicio do ficheiro para fazer uma leitura completa
+        while (fgets(linha2, 100, arquivo2) != NULL) {
+	        char* nome_medico = strtok(linha2, ",");
+	        char* codigo_medico = strtok(NULL, "\n");
+			int cod_medico = atoi(codigo_medico);
+	        if(cod_medico_utente == cod_medico){
+	        	encontrou = 1;
+	        	break;
+			}
+	    }
+	    
+	    
+	    if(encontrou == 0){
+	    	nomes[i] = (char*) malloc(sizeof(char));
+	        strcpy(nomes[i], nome_utente);
+	        i++;
+		}
+    }
+    *num = i;
+    
+    fclose(arquivo);    
+    fclose(arquivo2);
+    
+    return nomes;
 }

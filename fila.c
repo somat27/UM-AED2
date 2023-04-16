@@ -30,18 +30,7 @@ void adicionar_utente(Medico* m, Utente* u) {
     u->proximo = NULL;
 }
 
-
-
-Utente* remover_utente_da_fila(Medico* medico) {
-    Utente* primeiro_da_fila = medico->fila_espera;
-    if (primeiro_da_fila != NULL) {
-        medico->fila_espera = primeiro_da_fila->proximo;
-        primeiro_da_fila->proximo = NULL;
-    }
-    return primeiro_da_fila;
-}
-
-void listarFilaEsperaMedico(Medico* medico) {
+void listarFilaEsperaMedico(Medico* medico) {	
     Utente* utente_atual = medico->fila_espera;
     printf("\nFila de Espera do Medico %s (Codigo: %d):\n", medico->nome, medico->codigo);
     if (utente_atual == NULL) {
@@ -56,8 +45,7 @@ void listarFilaEsperaMedico(Medico* medico) {
     }
 }
 
-
-void Menu_Fila(Medico** medico){
+void Menu_Fila(Medico* medico){
 	system("CLS");
 	ASCII_Print(2);
 	char string[255];
@@ -74,9 +62,9 @@ void Menu_Fila(Medico** medico){
 			if (strcmp(string, utente.nome) == 0) {
 				while (fscanf(arquivo2, "%[^,],%d\n", linha, &i) == 2) {
 					if (i == utente.codigo_medico) {
-						(*medico)->codigo = i;
-						strcpy((*medico)->nome, linha);
-						adicionar_utente(*medico, &utente);
+						medico->codigo = i;
+						strcpy(medico->nome, linha);
+						adicionar_utente(medico, &utente);
 						//listarFilaEsperaMedico(*medico);
 						fclose(arquivo);
 						fclose(arquivo2);
@@ -86,8 +74,8 @@ void Menu_Fila(Medico** medico){
 		}
 		fclose(arquivo);
 		fclose(arquivo2);
-		if (*medico != NULL) {
-			listarFilaEsperaMedico(*medico);
+		if (medico != NULL) {
+			listarFilaEsperaMedico(medico);
 		}
 		getch();
 		Menu_Atendimento();
@@ -98,7 +86,7 @@ void Menu_Fila(Medico** medico){
 	}
 }
 
-void Menu_Lista_Medico(Medico** medico) {
+void Menu_Lista_Medico(Medico* medico) {
     system("CLS");
     int num, i, opcao = 0, tecla;
     char** nomes_medicos = Nomes_Medicos("medicos.txt", &num);
@@ -130,8 +118,8 @@ void Menu_Lista_Medico(Medico** medico) {
                     break;
             }
         } else if (tecla == 13) { // enter
-            strcpy((*medico)->nome, nomes_medicos[opcao]);
-            (*medico)->codigo = Codigo_Medico(nomes_medicos[opcao]);
+            strcpy(medico->nome, nomes_medicos[opcao]);
+            medico->codigo = Codigo_Medico(nomes_medicos[opcao]);
             listarFilaEsperaMedico(medico);
             break;
         }

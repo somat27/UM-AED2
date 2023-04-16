@@ -1,39 +1,28 @@
 Lista Para Fazer:
-
-
-Se sim, quando apertado coloca na fila de espera desse medico. 
-Na parte dos Utentes ter as opões criar, editar, consultar, remover e listar utentes
-
-Fazer um verificação sempre que um medico é removido pois os utentes ficaram sem medico de familia :)
-    Quando o medico é apagado, fazer um loop para subsitituir o id do medico por '0'
-    Quando se for colocar na fila de espera verificar o id do medico, caso '0', pedir para colocar num medico novo
-
-Implementar as funções necessárias para:
-    Inserir, editar, consultar, remover e listar utentes e médicos;
-    Carregar e guardar informações relativas a utentes e médicos em ficheiros de texto;
-    Registar a entrada de um utente e colocá-lo na fila de espera do seu médico de família;
-    Retirar o próximo utente da fila de espera de um dado médico;
-    Listar todos os utentes na lista de espera de um dado médico;
-    Determinar e apresentar o número de doentes em espera de um dado médico;
-    Apresentar o médico com mais doentes em espera;
-    Listar todos os utentes ordenados por médico.
-
-
-
-corrigir menu lista de modo a que guarde em memoria a fila e nao a esteja sempre a resetar
-
-
-ir passando a fila por todas as funções
+	// DONE (somat#0#):Função para criar utentes;
+	// DONE (somat#0#):Função para editar utentes;
+	// DONE (somat#0#):Função para consultar utentes;
+	// DONE (somat#0#):Função para remover utentes;
+	// DONE (somat#0#):Função para listar utentes;
+	// DONE (somat#0#):Função para criar medicos;
+	// DONE (somat#0#):Função para editar medicos;
+	// DONE (somat#0#):Função para consultar medicos;
+	// DONE (somat#0#):Função para remover medicos;
+	// DONE (somat#0#):Função para listar medicos;
+	// DONE (somat#0#):Carregar e guardar informações relativas a utentes e médicos em ficheiros de texto;
+	// TODO (somat#0#):Corrigir fila de espera (ja consegui guardar mas nao esta a dar para ler quando mudo de função);
+	// DONE (somat#0#):Criar loop para verificar se algum utente esta com um medico invalido, colocar todos num medico;
+	// DONE (somat#0#):Na parte de consultar utentes colocar qual é o medico dele;
+	// DONE (somat#0#):Na parte de consultar medicos apresentar todos os seus utentes;
+    // TODO (somat#0#):Registar a entrada de um utente e colocá-lo na fila de espera do seu médico de família;
+    // TODO (somat#0#):Retirar o próximo utente da fila de espera de um dado médico;
+    // TODO (somat#0#):Listar todos os utentes na lista de espera de um dado médico;
+    // TODO (somat#0#):Determinar e apresentar o número de doentes em espera de um dado médico;
+    // TODO (somat#0#):Apresentar o médico com mais doentes em espera;
+    // DONE (somat#0#):Listar todos os utentes ordenados por médico.
 
 Projeto:
 
-Um Centro de Saúde decidiu implementar um sistema de gestão e atendimento de utentes. 
-Para cada utente é guardada a seguinte informação: 
-    - código de utente, 
-    - o seu nome e o código do médico de família. 
-Pretende-se, também, guardar, para cada médico:
-    - um código numérico, 
-    - o seu nome e um apontador para a sua fila de espera de utentes.
 Quando um utente chega ao Centro de Saúde, indica o seu código de utente e, automaticamente, é colocado na lista de espera do seu médico. 
 Cada médico tem acesso à sua lista de espera.   
 Para um acesso mais rápido à informação, todas as listas (utentes,médicos) e filas de espera devem estar guardadas em memória. 

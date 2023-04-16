@@ -77,8 +77,51 @@ void ASCII_Print(int a){
 }
 
 void Menu_Utentes(){
-	int opcao = 1;
-    int tecla;
+    system("cls");
+	int num,num2,i,opcao=1,tecla;
+    char** nomes_utentes = Verificar_Medico(&num);
+	if(num!=0){
+		printf("\nLista de Utentes com Medicos invalidos: ");
+		for(i=0;i<num;i++){
+			printf("\n%s", nomes_utentes[i]);
+		}
+		printf("\nEscolha um novo medico para estes utentes!");
+		getch();
+		char** nomes_medicos = Nomes_Medicos("medicos.txt", &num2);
+		while (1) {
+	    	system("CLS");
+	        printf("Lista de medicos disponiveis: \n");
+	        for (i = 0; i < num2; i++) {
+		        printf("%s  %s\n", opcao == i+1 ? ">": " ", nomes_medicos[i]);
+		    }
+	
+	        tecla = getch();
+	
+	        if (tecla == 224) {
+	            tecla = getch(); 
+	
+	            switch (tecla) {
+	                case 72: 
+	                    opcao = opcao == 1 ? num2 : opcao - 1;
+	                    break;
+	                case 80: 
+	                    opcao = opcao == num2 ? 1 : opcao + 1;
+	                    break;
+	            }
+	        } else if (tecla == 13) {
+	        	Mudar_Medico_Utentes(nomes_utentes, nomes_medicos[opcao-1], num);
+	            break;
+	        }
+	    }
+		for (i = 0; i < num2; i++) {
+	        free(nomes_medicos[i]);
+	    }
+	    free(nomes_medicos);
+	}
+	for (i = 0; i < num; i++) {
+        free(nomes_utentes[i]);
+    }
+    free(nomes_utentes);
 
     while (1) {
         system("cls");
@@ -185,8 +228,7 @@ void Menu_Medicos(){
 }
 
 void Menu_Atendimento(){
-	Medico* medico = NULL; // declarar ponteiro fora do loop
-	medico = (Medico*) malloc(sizeof(Medico));
+	Medico* medico = malloc(sizeof(Medico));
 	
 	int opcao = 1;
     int tecla;
@@ -214,13 +256,13 @@ void Menu_Atendimento(){
         } else if (tecla == 13) {
             switch(opcao){
             	case 1:
-            		Menu_Fila(&medico);
+            		Menu_Fila(medico);
             		break;
             	case 2:
             		
             		break;
             	case 3:
-            		Menu_Lista_Medico(&medico);
+            		Menu_Lista_Medico(medico);
             		break;
             	case 4:
             		free(medico);
