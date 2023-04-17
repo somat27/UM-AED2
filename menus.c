@@ -86,7 +86,8 @@ void Menu_Utentes(){
 			printf("\n%s", nomes_utentes[i]);
 		}
 		printf("\nEscolha um novo medico para estes utentes!");
-		getch();
+		printf("\n\nPressione ENTER para continuar...");
+    	getchar(); // aguarda a tecla ENTER ser pressionada
 		char** nomes_medicos = Nomes_Medicos("medicos.txt", &num2);
 		while (1) {
 	    	system("CLS");

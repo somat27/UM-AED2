@@ -77,11 +77,13 @@ void Menu_Fila(Medico* medico){
 		if (medico != NULL) {
 			listarFilaEsperaMedico(medico);
 		}
-		getch();
+		printf("\n\nPressione ENTER para continuar...");
+    	getchar(); // aguarda a tecla ENTER ser pressionada
 		Menu_Atendimento();
 	} else {
 		printf("Utente nao encontrado!");
-		getch();
+		printf("\n\nPressione ENTER para continuar...");
+    	getchar(); // aguarda a tecla ENTER ser pressionada
 		Menu_Atendimento();
 	}
 }
@@ -93,7 +95,8 @@ void Menu_Lista_Medico(Medico* medico) {
 
     if (num == 0) {
         printf("Não há médicos registrados! Registre um médico primeiro.");
-        getch();
+        printf("\n\nPressione ENTER para continuar...");
+    	getchar(); // aguarda a tecla ENTER ser pressionada
         Menu_Utentes();
     }
 
@@ -130,7 +133,8 @@ void Menu_Lista_Medico(Medico* medico) {
     }
     free(nomes_medicos);
 
-    getch();
+    printf("\n\nPressione ENTER para continuar...");
+    getchar(); // aguarda a tecla ENTER ser pressionada
     Menu_Utentes();
 }
 

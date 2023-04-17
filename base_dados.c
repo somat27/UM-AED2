@@ -113,7 +113,8 @@ void Editar_Utente(){
 	}else{
     	printf("\nUtente editado com sucesso!");
 	}
-    getch();
+    printf("\n\nPressione ENTER para continuar...");
+    getchar(); // aguarda a tecla ENTER ser pressionada
 	Menu_Utentes();
 }
 
@@ -184,7 +185,8 @@ void Editar_Medico(){
 	}else{
     	printf("\nUtente editado com sucesso!");
 	}
-    getch();
+    printf("\n\nPressione ENTER para continuar...");
+    getchar(); // aguarda a tecla ENTER ser pressionada
 	Menu_Medicos();
 }
 

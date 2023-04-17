@@ -21,58 +21,6 @@ int VerificarNomeUtente(char* nome){
     return 0;	
 }
 
-char** Nomes_Utentes(char* nome_arquivo, int* n_utentes){
-    FILE* arquivo = fopen(nome_arquivo, "r");
-    
-    char** nomes = (char**) malloc(sizeof(char*));
-    if (nomes == NULL) {
-        printf("Erro ao alocar memoria\n");
-        return NULL;
-    }
-    
-    char linha[100];
-    int i = 0;
-    while (fgets(linha, 100, arquivo) != NULL) {
-        char* nome = strtok(linha, ",");
-        char* codigo_str = strtok(NULL, ",");
-        
-        nomes[i] = (char*) malloc(sizeof(char));
-        if (nomes[i] == NULL) {
-            printf("Erro ao alocar memoria\n");
-            return NULL;
-        }
-        strcpy(nomes[i], nome);
-        i++;
-    }
-    *n_utentes = i;
-    
-    fclose(arquivo);
-    return nomes;
-}
-
-int Codigo_Utente(char* Nome_Utente, int* cod_medico){
-	FILE* arquivo = fopen("utentes.txt", "r");
-    
-	char linha[100];
-	char *num_str;
-	char *num_str2;
-    while (fgets(linha, 100, arquivo) != NULL) {
-        char* nome = strtok(linha, ",");
-        char* codigo_str = strtok(NULL, ",");
-        char* codigo_str2 = strtok(NULL, "\n");
-        
-        if(strcmp(nome ,Nome_Utente) == 0){
-		    num_str = strtok(codigo_str, "\n");// remove o \n do char
-		    int num_int = atoi(num_str);// converte o char para int
-		    num_str2 = strtok(codigo_str2, "\n");// remove o \n do char
-		    *cod_medico = atoi(num_str2);// converte o char para int
-        	return num_int;
-		}
-    }
-    fclose(arquivo);
-	return -1;
-}
-
 void Criar_Utente(){
 	system("CLS");
 	char nome[255],medico[255];
@@ -84,7 +32,8 @@ void Criar_Utente(){
 	char** nomes_medicos = Nomes_Medicos("medicos.txt",&num); 
 	if(num == 0){
 		printf("Não há medicos registados!\nRegiste um medico primeiro!");
-		getch();
+		printf("\n\nPressione ENTER para continuar...");
+    	getchar(); // aguarda a tecla ENTER ser pressionada
 		Menu_Utentes();
 	} 
 	
@@ -93,11 +42,12 @@ void Criar_Utente(){
 	gets(nome);
 	if(VerificarNomeUtente(nome) == 1){
 		printf("Ja existe um utente chamado \"%s\"",nome);
-		getch();
+		printf("\n\nPressione ENTER para continuar...");
+    	getchar(); // aguarda a tecla ENTER ser pressionada
 		Menu_Utentes();
 	}
 
-
+	Utente utente;
     while (1) {
     	system("CLS");
         printf("Qual é o medico de %s\n\n",nome);
@@ -121,22 +71,23 @@ void Criar_Utente(){
         } else if (tecla == 13) {
         	strcpy(medico, nomes_medicos[opcao-1]);
         	int cod_medico = Codigo_Medico(medico);
-        	for (i = 0; i < num; i++) {
-		        free(nomes_medicos[i]);
-		    }
-		    free(nomes_medicos);
-		    
-		    printf("\n\nInformacoes sobre o Utente:");
-		    printf("\n%s | %d | %d",nome, codigo, cod_medico);
-		    Utente utente;
 		    
 		    strcpy(utente.nome, nome);
 		    utente.codigo = codigo;
 		    utente.codigo_medico = cod_medico;
 		    guardarBaseDadosUtente(&utente);
+		    
             break;
         }
     }
+	for (i = 0; i < num; i++) {
+        free(nomes_medicos[i]);
+    }
+    free(nomes_medicos);
+    printf("\n\nInformações sobre o Utente:");
+    printf("\n%s | %d | %d", utente.nome, utente.codigo, utente.codigo_medico);
+    printf("\n\nPressione ENTER para continuar...");
+    getchar(); // aguarda a tecla ENTER ser pressionada
     
     Menu_Utentes();
 }
@@ -163,13 +114,15 @@ void Consultar_Utente(){
 				int cod_medico = atoi(codigo_medico);
 		        if(cod_medico==cod_medico_utente){
 		        	printf("\nUtente: %s, Codigo: %d\nMedico: %s, Codigo: %d", nome_utente, codigo_utente, nome_medico, cod_medico);
+					break;
 				}
 		    }
 		}
     }
     fclose(arquivo);
 	fclose(arquivo2);
-    getch();
+    printf("\n\nPressione ENTER para continuar...");
+    getchar(); // aguarda a tecla ENTER ser pressionada
     Menu_Utentes();
 }
 
@@ -178,16 +131,29 @@ void Remover_Utente(){
 	char nome[255];
 	printf("Nome do Utente de deseja remover: ");
 	gets(nome);
-	if(RemoverUtente(nome)){
-		Menu_Utentes(); 
-	}else{
-		printf("Nao foi encontrado esse nome!");		
-	}
+	
+	printf("Tem certeza que deseja remover o medico %s? (S/N)\n", nome);
+    char resposta = getchar();
+    getchar(); // Limpar o buffer de entrada
+	
+	if (resposta == 'S' || resposta == 's') {
+		if(RemoverUtente(nome)){
+			printf("Utente removido com sucesso!\n");
+		}else{
+			printf("Nao foi encontrado esse nome!");		
+		}
+	} else {
+        printf("Operacao cancelada pelo usuario!\n");
+    }
+    
+    printf("\n\nPressione ENTER para continuar...");
+    getchar(); // aguarda a tecla ENTER ser pressionada
+    Menu_Utentes();
 }
 
 void Listar_Utentes(){
 	system("CLS");
-	printf("Lista de Utentes registados: ");
+	printf("Lista de Utentes registados: \n");
 	char linha[100];
     int i = 0;
     FILE* arquivo = fopen("utentes.txt", "r");
@@ -196,10 +162,11 @@ void Listar_Utentes(){
         char* codigo_str = strtok(NULL, ",");
         char* num_str = strtok(codigo_str, "\n");
 		int num_int = atoi(num_str);
-        printf("\n\nNome: %s, Codigo: %d", nome, num_int);
+        printf("\nNome: %s, Codigo: %d", nome, num_int);
     }
     fclose(arquivo);
-    getch();
+    printf("\n\nPressione ENTER para continuar...");
+    getchar(); // aguarda a tecla ENTER ser pressionada
     Menu_Utentes();
 }
 
