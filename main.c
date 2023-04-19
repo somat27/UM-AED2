@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <locale.h>
 #include <stdlib.h>
+#include <time.h>
+#include <unistd.h>
+#include <conio.h>
 
 #include "estruturas.h"
 #include "menus.h"
@@ -14,10 +17,6 @@ void criarFiles(){
 	FILE* arquivo2 = fopen("utentes.txt", "a");
 	fclose(arquivo);
 	fclose(arquivo2);
-}
-
-void Sair_Programa(){   
-	exit(0);
 }
 
 int main(int argc, char *argv[]){

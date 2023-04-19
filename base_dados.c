@@ -2,9 +2,14 @@
 #include <stdio.h>
 #include <time.h>
 #include <unistd.h>
+#include <conio.h>
 
 #include "estruturas.h"
+#include "menus.h"
+#include "medicos.h"
+#include "utentes.h"
 #include "base_dados.h"
+#include "fila.h"
 
 void guardarBaseDadosUtente(Utente* utente){
     FILE* arquivo = fopen("utentes.txt", "a");
