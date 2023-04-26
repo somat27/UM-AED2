@@ -1,58 +1,25 @@
 Lista Para Fazer:
-	// DONE (somat#0#):Função para criar utentes;
-	// DONE (somat#0#):Função para editar utentes;
-	// DONE (somat#0#):Função para consultar utentes;
-	// DONE (somat#0#):Função para remover utentes;
-	// DONE (somat#0#):Função para listar utentes;
-	// DONE (somat#0#):Função para criar medicos;
-	// DONE (somat#0#):Função para editar medicos;
-	// DONE (somat#0#):Função para consultar medicos;
-	// DONE (somat#0#):Função para remover medicos;
-	// DONE (somat#0#):Função para listar medicos;
-	// DONE (somat#0#):Carregar e guardar informações relativas a utentes e médicos em ficheiros de texto;
-	// TODO (somat#0#):Corrigir fila de espera (ja consegui guardar mas nao esta a dar para ler quando mudo de função);
-	// DONE (somat#0#):Criar loop para verificar se algum utente esta com um medico invalido, colocar todos num medico;
-	// DONE (somat#0#):Na parte de consultar utentes colocar qual é o medico dele;
-	// DONE (somat#0#):Na parte de consultar medicos apresentar todos os seus utentes;
-    // TODO (somat#0#):Registar a entrada de um utente e colocá-lo na fila de espera do seu médico de família;
-    // TODO (somat#0#):Retirar o próximo utente da fila de espera de um dado médico;
-    // TODO (somat#0#):Listar todos os utentes na lista de espera de um dado médico;
-    // TODO (somat#0#):Determinar e apresentar o número de doentes em espera de um dado médico;
-    // TODO (somat#0#):Apresentar o médico com mais doentes em espera;
-    // DONE (somat#0#):Listar todos os utentes ordenados por médico.
+	// DONE (somat#0#): Funcao para criar utentes;
+	// DONE (somat#0#): Funcao para editar utentes;
+	// DONE (somat#0#): Funcao para consultar utentes;
+	// DONE (somat#0#): Funcao para remover utentes;
+	// DONE (somat#0#): Funcao para listar utentes;
+	// DONE (somat#0#): Funcao para criar medicos;
+	// DONE (somat#0#): Funcao para editar medicos;
+	// DONE (somat#0#): Funcao para consultar medicos;
+	// DONE (somat#0#): Funcao para remover medicos;
+	// DONE (somat#0#): Funcao para listar medicos;
+	// DONE (somat#0#): Carregar e guardar informacoes relativas a utentes e medicos em ficheiros de texto;
+	// TODO (somat#0#): Corrigir fila de espera (ja consegui guardar mas nao esta a dar para ler quando mudo de funcao);
+	// DONE (somat#0#): Criar loop para verificar se algum utente esta com um medico invalido, colocar todos num medico;
+	// DONE (somat#0#): Na parte de consultar utentes colocar qual e o medico dele;
+	// DONE (somat#0#): Na parte de consultar medicos apresentar todos os seus utentes;
+    // TODO (somat#0#): Registar a entrada de um utente e coloca-lo na fila de espera do seu medico de familia;
+    // TODO (somat#0#): Retirar o proximo utente da fila de espera de um dado medico;
+    // TODO (somat#0#): Listar todos os utentes na lista de espera de um dado medico;
+    // TODO (somat#0#): Determinar e apresentar o numero de doentes em espera de um dado medico;
+    // TODO (somat#0#): Apresentar o medico com mais doentes em espera;
+    // TODO (somat#0#): Listar todos os utentes ordenados por medico.
+    // TODO (somat#0#): Colocar os utentes e medico em lista ligada simples quando for para os listar, ou seja, ler dos ficheiros e guardar em lista ligada simples, depois Ã© so listar essa lista.
 
-Projeto:
-
-Quando um utente chega ao Centro de Saúde, indica o seu código de utente e, automaticamente, é colocado na lista de espera do seu médico. 
-Cada médico tem acesso à sua lista de espera.   
-Para um acesso mais rápido à informação, todas as listas (utentes,médicos) e filas de espera devem estar guardadas em memória. 
-Só é necessário guardar de uma forma persistente (em ficheiro de texto) a informação relativa aos utentes e aos médicos. 
-O sistema deverá também ter a possibilidade de carregar a informação relativa aos utentes e aos médicos a partir de ficheiro. 
-O ficheiro com a informação dos utentes deverá ter o nome utentes.txt. 
-    Deverá ter um utente por linha de texto e os dados do utente serão separados por vírgula. 
-O ficheiro com a informação dos médicos deverá ter o nome medicos.txt. 
-    Deverá ter um médico por linha de texto e os dados do médico (só o código e o nome) serão separados por vírgula.
-Pretende-se criar um sistema de informação que:
-    permita gerir (inserir, editar, consultar, remover e listar) os utentes do Centro de Saúde;
-    permita gerir (inserir, editar, consultar, remover e listar) os médicos afetos ao Centro de Saúde;
-    permita carregar (importar) e guardar em ficheiro a informação relativa aos utentes e aos médicos;
-    permita registar a entrada de um Utente para ser atendido (deverá automaticamente colocar o utente na fila de espera do seu médico);
-    permita, dado o código do médico, retirar da lista de espera o próximo utente a ser atendido para esse médico;
-    permita listar, dado o código do médico, todos os utentes na sua lista de espera;
-    permita determinar e apresentar o número de doentes em espera de um dado médico;
-    permita apresentar o médico com mais doentes em espera;
-    permita listar todos os utentes ordenados por médico.
-
-Valorização
-Será valorizada a utilização de estruturas de dados de comprimento variável.
-A classificação dos trabalhos terá ainda em consideração aspetos como:
-    Qualidade da execução do programa (validações, testes, …)
-    Qualidade da satisfação dos requisitos
-    Facilidade de utilização do sistema
-    Adequação da conceção e seleção das estruturas de dados adequadas
-    Qualidade do código fonte apresentado
-        Correção (avaliação se o código está coerente com a especificação do enunciado e se não tem erros) 
-        Design (avalia a forma como o código está escrito (organização, eficiente, reutilizável))
-        Estilo (avalia a legibilidade do código (comentado, indentado,nomes de variáveis e funções adequadas,...))
-    Desempenho do grupo no decorrer da apresentação 
 
