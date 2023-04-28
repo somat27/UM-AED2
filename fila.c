@@ -219,46 +219,7 @@ void Menu_Remover_Lista_Medico() {
                     break;
             }
         } else if (tecla == 13) {
-            int codigo_medico = Codigo_Medico(nomes_medicos[opcao]);
-            
-            Medico* atualMedico = medicos;
-			while (atualMedico != NULL) {
-			    if(atualMedico->codigo == codigo_medico){
-			    	Utente* atualUtente = atualMedico->fila_espera;
-				    while (atualUtente != NULL) {
-				        printf("Nome: %s, Código: %d\n", atualUtente->nome, atualUtente->codigo);
-				        atualUtente = atualUtente->proximo;
-				    }
-				}
-			    atualMedico = atualMedico->proximo;
-			}     
-			  
-			printf("\n\nTem a certeza que deseja remover o ultimo utente? (S/N)");
-		    char resposta = getchar();
-		    getchar();
-		    
-			if (resposta == 'S' || resposta == 's') {
-				Medico* atualMedico = medicos;
-			    while (atualMedico != NULL) {
-			        if (atualMedico->codigo == codigo_medico) {
-			            Utente* atual = atualMedico;			   
-						while (atual->proximo->proximo != NULL) {
-					        atual = atual->proximo;
-					    }       
-						
-						Utente* ultimo = atual->proximo;
-    					atual->proximo = NULL;
-						  
-						free(ultimo);
-
-			            break;
-			        }
-			        atualMedico = atualMedico->proximo;
-			    }
-				printf("\nO utente foi removido com sucesso!");
-			} else {
-		        printf("\nOperacao cancelada pelo usuario!");
-		    }  
+            //COMPLETA DE MODO A APAGAR O ULTIMO UTENTE REGISTADO NA FILA DE ESPERA
 			
             break;
         }
@@ -273,3 +234,4 @@ void Menu_Remover_Lista_Medico() {
     getchar(); // aguarda a tecla ENTER ser pressionada
     Menu_Atendimento();
 }
+
