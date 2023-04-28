@@ -20,6 +20,4 @@ Lista Para Fazer:
     // TODO (somat#0#): Determinar e apresentar o numero de doentes em espera de um dado medico;
     // TODO (somat#0#): Apresentar o medico com mais doentes em espera;
     // TODO (somat#0#): Listar todos os utentes ordenados por medico.
-    // TODO (somat#0#): Colocar os utentes e medico em lista ligada simples quando for para os listar, ou seja, ler dos ficheiros e guardar em lista ligada simples, depois é so listar essa lista.
-
-
+    // TODO (somat#0#): Colocar variaveis globais, ex: numero de contas criadas. Poupar nos loops.
