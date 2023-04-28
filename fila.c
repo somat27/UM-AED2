@@ -159,7 +159,7 @@ void Menu_Lista_Medico() {
             }
         } else if (tecla == 13) {
             int codigo_medico = Codigo_Medico(nomes_medicos[opcao]);
-            
+            int qtdUtentes = 0;
             Medico* atualMedico = medicos;
 			while (atualMedico != NULL) {
 			    if(atualMedico->codigo == codigo_medico){
@@ -167,10 +167,12 @@ void Menu_Lista_Medico() {
 				    while (atualUtente != NULL) {
 				        printf("Nome: %s, Código: %d\n", atualUtente->nome, atualUtente->codigo);
 				        atualUtente = atualUtente->proximo;
+				        qtdUtentes++;
 				    }
 				}
 			    atualMedico = atualMedico->proximo;
 			}     
+			printf("\nTotal de %d utentes em fila de espera", qtdUtentes);
 			  
             break;
         }
@@ -219,7 +221,16 @@ void Menu_Remover_Lista_Medico() {
                     break;
             }
         } else if (tecla == 13) {
-            //COMPLETA DE MODO A APAGAR O ULTIMO UTENTE REGISTADO NA FILA DE ESPERA
+        	int codigoMedico = Codigo_Medico(nomes_medicos[opcao]);
+        	
+            Medico* atualMedico = medicos;
+		    while (atualMedico != NULL) {
+		        if (atualMedico->codigo == codigoMedico) {
+		            //remover ultimo utente
+		            break;
+				}
+				atualMedico = atualMedico->proximo;
+    		}
 			
             break;
         }
