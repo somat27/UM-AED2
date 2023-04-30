@@ -13,6 +13,36 @@
 
 Medico *medicos = NULL;
 
+void voltar_menu(){
+	printf("\n\nPressione ENTER para continuar...");
+	getchar(); // aguarda a tecla ENTER ser pressionada
+	Menu_Atendimento();
+}
+
+Medico* Encontrar_Medico_Com_Mais_Utentes_Espera(int *qtdutentes) {
+    Medico* atualMedico = medicos;
+    Medico* medicoComMaisUtentesEspera = NULL;
+    int maxUtentesEspera = -1;
+	if(atualMedico == NULL){
+		return NULL;
+	}
+    while (atualMedico != NULL) {
+        Utente* atualUtente = atualMedico->fila_espera;
+        int numUtentesEspera = 0;
+        while (atualUtente != NULL) {
+            numUtentesEspera++;
+            atualUtente = atualUtente->proximo;
+        }
+        if (numUtentesEspera > maxUtentesEspera) {
+            maxUtentesEspera = numUtentesEspera;
+            medicoComMaisUtentesEspera = atualMedico;
+        }
+        atualMedico = atualMedico->proximo;
+    }
+    *qtdutentes = maxUtentesEspera;
+    return medicoComMaisUtentesEspera;
+}
+
 void Menu_Atendimento(){
 	int opcao = 1;
     int tecla;
@@ -21,6 +51,11 @@ void Menu_Atendimento(){
         system("cls");
         ASCII_Print(2);
         printf("\n\n");
+        int qtdutentes;
+        Medico* medico_mais_ocupado = Encontrar_Medico_Com_Mais_Utentes_Espera(&qtdutentes);
+        if(medico_mais_ocupado != NULL && qtdutentes != 0){
+        	printf("\t%s tem %d utentes em espera formando a maior fila de espera!\n\n",medico_mais_ocupado->nome,qtdutentes);
+		}
         printf("\t%s  Colocar na lista de espera\n", opcao == 1 ? ">": " ");
         printf("\t%s  Remover da lista de espera \n", opcao == 2 ? ">": " ");
         printf("\t%s  Ver lista de espera \n", opcao == 3 ? ">": " ");
@@ -57,6 +92,64 @@ void Menu_Atendimento(){
     }
 }
 
+void Criar_Medico_Apontador(int i, char *linha){
+	int medico_ja_criado = 0;
+	
+	Medico* atualMedico = medicos;
+    while (atualMedico != NULL) {
+        if (atualMedico->codigo == i) {
+            medico_ja_criado = 1;
+            return;
+        }
+        atualMedico = atualMedico->proximo;
+    }
+	if(medico_ja_criado == 0){
+		// Cria o novo médico
+	    Medico* novoMedico = malloc(sizeof(Medico));
+	    novoMedico->codigo = i;
+	    strcpy(novoMedico->nome, linha);
+	    novoMedico->fila_espera = NULL;
+	    
+	    // Adiciona o novo médico à lista
+	    novoMedico->proximo = medicos;
+	    medicos = novoMedico;
+	}
+}
+
+void Colocar_Utente_Fila_Espera(char *string, Utente *utente){
+	Utente* novoUtenteFila = malloc(sizeof(Utente));
+	novoUtenteFila->codigo = utente->codigo;
+	strcpy(novoUtenteFila->nome, utente->nome);
+	novoUtenteFila->proximo = NULL;	
+	
+	Medico* atualMedico = medicos;
+	while (atualMedico != NULL) {
+	    if (atualMedico->codigo == utente->codigo_medico) {
+	        Utente* atualUtente = atualMedico->fila_espera;
+	        if (atualUtente == NULL) {
+	            atualMedico->fila_espera = novoUtenteFila;
+				printf("\n%s foi adicionado a lista de espera de %s\n", string, atualMedico->nome);
+	        } else {
+	            while (atualUtente != NULL) {
+				    if (atualUtente->codigo == novoUtenteFila->codigo) {
+				        printf("\nEsse utente ja se encontra na fila de espera!");
+				        break;
+				    }
+				    if (atualUtente->proximo == NULL) {
+				        atualUtente->proximo = novoUtenteFila;
+				        printf("\n%s foi adicionado a lista de espera de %s\n", string, atualMedico->nome);	
+				        break;
+				    }
+				    atualUtente = atualUtente->proximo;
+				}
+
+	        }				        
+	        break;
+	    }
+	    atualMedico = atualMedico->proximo;
+	}
+}
+
 void Menu_Fila(){
 	system("CLS");
 	ASCII_Print(2);
@@ -74,39 +167,8 @@ void Menu_Fila(){
 			if (strcmp(string, utente.nome) == 0) {
 				while (fscanf(arquivo2, "%[^,],%d\n", linha, &i) == 2) {
 					if (i == utente.codigo_medico) {
-						
-						Medico* novoMedico = malloc(sizeof(Medico));
-						novoMedico->codigo = i;
-						strcpy(novoMedico->nome, linha);
-						novoMedico->fila_espera = NULL;
-						novoMedico->proximo = medicos;
-						medicos = novoMedico;
-						
-						Utente* novoUtenteFila = malloc(sizeof(Utente));
-						novoUtenteFila->codigo = utente.codigo;
-						strcpy(novoUtenteFila->nome, utente.nome);
-						novoUtenteFila->proximo = NULL;	
-						
-						Medico* atualMedico = medicos;
-						while (atualMedico != NULL) {
-						    if (atualMedico->codigo == utente.codigo_medico) {
-						        Utente* atualUtente = atualMedico->fila_espera;
-						        if (atualUtente == NULL) {
-						            atualMedico->fila_espera = novoUtenteFila;
-						        } else {
-						            while (atualUtente->proximo != NULL) {
-						                atualUtente = atualUtente->proximo;
-						            }
-						            atualUtente->proximo = novoUtenteFila;
-						        }
-						        
-						        printf("\n%s foi adicionado a lista de espera de %s\n", string, atualMedico->nome);
-						        
-						        break;
-						    }
-						    atualMedico = atualMedico->proximo;
-						}	
-											
+						Criar_Medico_Apontador(i, linha);
+						Colocar_Utente_Fila_Espera(string, &utente);	
 						break;
 					}
 				}
@@ -114,14 +176,10 @@ void Menu_Fila(){
 		}
 		fclose(arquivo);
 		fclose(arquivo2);
-		printf("\n\nPressione ENTER para continuar...");
-    	getchar(); // aguarda a tecla ENTER ser pressionada
-		Menu_Atendimento();
+		voltar_menu();
 	} else {
 		printf("Utente nao encontrado!");
-		printf("\n\nPressione ENTER para continuar...");
-    	getchar(); // aguarda a tecla ENTER ser pressionada
-		Menu_Atendimento();
+		voltar_menu();
 	}
 }
 
@@ -172,7 +230,11 @@ void Menu_Lista_Medico() {
 				}
 			    atualMedico = atualMedico->proximo;
 			}     
-			printf("\nTotal de %d utentes em fila de espera", qtdUtentes);
+			if(qtdUtentes == 0){
+				printf("\nNao existe ninguem na fila de espera!");
+			}else{
+				printf("\nTotal de %d utentes em fila de espera", qtdUtentes);	
+			}
 			  
             break;
         }
@@ -182,11 +244,20 @@ void Menu_Lista_Medico() {
         free(nomes_medicos[i]);
     }
     free(nomes_medicos);
-
-    printf("\n\nPressione ENTER para continuar...");
-    getchar();
-    Menu_Atendimento();
+	voltar_menu();
 }
+
+void Remover_Primeiro_Utente_Fila_Espera(Medico *medico) {
+    Utente *primeiroUtente = medico->fila_espera;
+    if (primeiroUtente == NULL) {
+        printf("Fila de espera vazia.\n");
+        return;
+    }
+    medico->fila_espera = primeiroUtente->proximo;
+    free(primeiroUtente);
+    printf("Primeiro utente da fila de espera de %s removido.\n", medico->nome);
+}
+
 
 void Menu_Remover_Lista_Medico() {
     system("CLS");
@@ -226,12 +297,16 @@ void Menu_Remover_Lista_Medico() {
             Medico* atualMedico = medicos;
 		    while (atualMedico != NULL) {
 		        if (atualMedico->codigo == codigoMedico) {
-		            //remover ultimo utente
+		        	if (atualMedico->fila_espera == NULL) {
+				        printf("Erro: Nao ha ninguem na fila de espera!\n"); //Nao esta a aparecer este erro?
+				    }else{
+		        		Remover_Primeiro_Utente_Fila_Espera(atualMedico);
+					}
 		            break;
 				}
 				atualMedico = atualMedico->proximo;
     		}
-			
+    		
             break;
         }
     }
@@ -240,9 +315,6 @@ void Menu_Remover_Lista_Medico() {
         free(nomes_medicos[i]);
     }
     free(nomes_medicos);
-
-    printf("\n\nPressione ENTER para continuar...");
-    getchar(); // aguarda a tecla ENTER ser pressionada
-    Menu_Atendimento();
+	voltar_menu();
 }
 

@@ -11,5 +11,3 @@ typedef struct medico {
     Utente* fila_espera;
     struct medico* proximo;
 } Medico;
-
-
