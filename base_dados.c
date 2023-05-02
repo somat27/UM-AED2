@@ -25,8 +25,11 @@ int RemoverUtente(char* nomeUtente){
     Utente utente;
 	while (fscanf(arquivo, "%[^,],%d,%d\n", utente.nome, &utente.codigo, &utente.codigo_medico) == 3) //O [^,] ï¿½ para ler uma string ate a proxima ','
     {
-    	if (strcmp(utente.nome, nomeUtente) != 0)
-        {
+    	/* 
+		Caso utente.nome seja diferente do nomeUtente entao copiamos as informações para 
+		o ficheiro temporario, se eles forem iguais entao nao copia para o ficheiro temporario
+		*/
+    	if (strcmp(utente.nome, nomeUtente) != 0){
             fprintf(arquivoTemp, "%s,%d,%d\n", utente.nome, utente.codigo, utente.codigo_medico);
         }else{
         	a = 1;
@@ -35,6 +38,11 @@ int RemoverUtente(char* nomeUtente){
 
     fclose(arquivo);
     fclose(arquivoTemp);
+    
+    /* 
+	Agora eliminamos o ficheiro utentes.txt que continha os utentes antigos e renomeamos
+	o ficheiro temporario para ser o novo utentes.txt com as alterações feitas
+	*/
     
 	remove("utentes.txt");
 	rename("temp.txt", "utentes.txt");
@@ -54,6 +62,12 @@ void Editar_Utente(){
     Utente utente;
     while (fscanf(arquivo, "%[^,],%d,%d\n", utente.nome, &utente.codigo, &utente.codigo_medico) == 3)
     {
+    	/*
+		Encontramos o utente no ficheiro pelo nome do mesmo e nao copiamos para
+		o ficheiro temporario, pois vamos alterar as informações como nome ou medico
+		de familia e so depois é que passamos para o ficheiro temporario que ira 
+		substituir o ficheiro utentes.txt
+		*/
         if (strcmp(utente.nome, string) == 0)
         {
         	encontrou = 1;
@@ -206,8 +220,14 @@ int Gerar_Codigo(){
 
     do {
         encontrou = 0;
-        num_aleatorio = rand() % 999999 + 100000;
-        
+        /*
+		Gera um numero aleatorio entre 0 e 9999999 mas como eu quero numero superiores a 1000000
+		temos de somar 100000 para garantir que o numero gerado esta dentro do intervalo desejado
+		*/
+        num_aleatorio = rand() % 999999 + 100000; 
+        /*
+		Verificação para saber se este codigo ja esta a ser ou nao utilizado noutras contas
+		*/
         while (fgets(linha, sizeof(linha), arquivo)) {
         	char* nome_utente = strtok(linha, ",");
 	        char* codigo_utente = strtok(NULL, ",");
