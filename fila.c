@@ -216,14 +216,16 @@ void Menu_Lista_Medico() {
                     break;
             }
         } else if (tecla == 13) {
+        	system("CLS");
             int codigo_medico = Codigo_Medico(nomes_medicos[opcao]);
             int qtdUtentes = 0;
             Medico* atualMedico = medicos;
 			while (atualMedico != NULL) {
 			    if(atualMedico->codigo == codigo_medico){
+        			printf("Lista de espera do medico: %s\n\n", atualMedico->nome);
 			    	Utente* atualUtente = atualMedico->fila_espera;
 				    while (atualUtente != NULL) {
-				        printf("Nome: %s, Código: %d\n", atualUtente->nome, atualUtente->codigo);
+				        printf("\nNome: %s, Código: %d", atualUtente->nome, atualUtente->codigo);
 				        atualUtente = atualUtente->proximo;
 				        qtdUtentes++;
 				    }
@@ -233,7 +235,7 @@ void Menu_Lista_Medico() {
 			if(qtdUtentes == 0){
 				printf("\nNao existe ninguem na fila de espera!");
 			}else{
-				printf("\nTotal de %d utentes em fila de espera", qtdUtentes);	
+				printf("\n\nTotal de %d utentes em fila de espera", qtdUtentes);	
 			}
 			  
             break;

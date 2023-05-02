@@ -17,7 +17,10 @@ Lista Para Fazer:
     // DONE (somat#0#): Retirar o proximo utente da fila de espera de um dado medico;
     // DONE (somat#0#): Listar todos os utentes na lista de espera de um dado medico;
     // DONE (somat#0#): Determinar e apresentar o numero de doentes em espera de um dado medico;
-    // TODO (somat#0#): Apresentar o medico com mais doentes em espera;
+    // DONE (somat#0#): Apresentar o medico com mais doentes em espera;
     // DONE (somat#0#): Listar todos os utentes ordenados por medico.
     // DONE (somat#0#): Colocar um aviso para quando a fila de espera esta vazia
     // DONE (somat#0#): Fazer um verificacao para ver se esse utente ja esta na fila de espera
+    // TODO (somat#0#): Fazer validações no codigo, testes
+    // TODO (somat#0#): Colocar o codigo elegivel, conseguir ler o codigo
+    // TODO (somat#0#): Colocar comentarios
