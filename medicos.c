@@ -11,6 +11,12 @@
 #include "base_dados.h"
 #include "fila.h"
 
+void voltar_menu_medicos(){
+	printf("\n\nPressione ENTER para continuar...");
+	getchar(); // aguarda a tecla ENTER ser pressionada
+	Menu_Medicos();
+}
+
 int VerificarNomeMedico(char* nome){	
     FILE* arquivo = fopen("medicos.txt", "r");
     Medico medico;
@@ -71,9 +77,7 @@ void Criar_Medico(){
 	nome[strcspn(nome, "\n")] = '\0'; // remove a nova linha
 	if(VerificarNomeMedico(nome) == 1){
 		printf("Ja existe um medico chamado \"%s\"",nome);
-		printf("\n\nPressione ENTER para continuar...");
-    	getchar(); // aguarda a tecla ENTER ser pressionada
-		Menu_Medicos();
+		voltar_menu_medicos();
 	}
 	int codigo = Gerar_Codigo();	
 	Medico medico;
@@ -81,9 +85,7 @@ void Criar_Medico(){
     medico.codigo = codigo;
     guardarBaseDadosMedico(&medico);
     printf("Medico criado com sucesso!");
-    printf("\n\nPressione ENTER para continuar...");
-    getchar(); // aguarda a tecla ENTER ser pressionada
-    Menu_Medicos();
+	voltar_menu_medicos();
 }
 
 void Consultar_Medico(){
@@ -116,6 +118,12 @@ void Consultar_Medico(){
 		        
 		        if(cod_medico_arquivo == cod_medico_utente) {
 		        	printf("\n Nome: %s, Codigo: %d", nome_utente, cod_utente);
+		        	int codigo_utente = Codigo_Utente(nome_utente);
+					if(Utente_Esta_Na_Fila_De_Espera(codigo_utente) == 1){
+						printf(" - Este utente esta na fila de espera!");
+					}else{
+						printf(" - Este utente nao esta na fila de espera!");
+					}
 				}
 		    }
 		    fseek(arquivo_utentes, 0, SEEK_SET); // volta ao início do arquivo de utentes
@@ -124,9 +132,7 @@ void Consultar_Medico(){
     fclose(arquivo_medicos);
     fclose(arquivo_utentes);
     
-    printf("\n\nPressione ENTER para continuar...");
-    getchar(); // aguarda a tecla ENTER ser pressionada
-    Menu_Medicos();
+	voltar_menu_medicos();
 }
 
 void Remover_Medico(){
@@ -134,6 +140,12 @@ void Remover_Medico(){
 	char nome[255];
 	printf("Nome do Medico de deseja remover: ");
 	gets(nome);
+	
+	int cod_medico = Codigo_Medico(nome);
+	if(Verificar_Fila_Espera_Medico(cod_medico) == 1){
+		printf("\nEste medico tem utentes na fila de espera. Remova-os antes de remover este medico!");
+    	voltar_menu_medicos();
+	}
 	
 	printf("Tem certeza que deseja remover o medico %s? (S/N)\n", nome);
     char resposta = getchar();
@@ -149,9 +161,7 @@ void Remover_Medico(){
         printf("Operacao cancelada pelo usuario!\n");
     }
     
-    printf("\n\nPressione ENTER para continuar...");
-    getchar(); // aguarda a tecla ENTER ser pressionada
-    Menu_Medicos();
+	voltar_menu_medicos();
 }
 
 void Listar_Medicos(){
@@ -167,7 +177,51 @@ void Listar_Medicos(){
         printf("\nNome: %s, Codigo: %d", nome, num_int);
     }
     fclose(arquivo);
-    printf("\n\nPressione ENTER para continuar...");
-    getchar(); // aguarda a tecla ENTER ser pressionada
-    Menu_Medicos();
+	voltar_menu_medicos();
+}
+
+void Editar_Medico(){
+	system("CLS");
+	char string[255], string2[255];
+	int encontrou = 0;
+	printf("Nome do Medico que quer editar: ");
+	fflush(stdin);
+	gets(string);
+	
+	int cod_medico = Codigo_Medico(string);
+	if(Verificar_Fila_Espera_Medico(cod_medico) == 1){
+		printf("\nEste medico tem utentes na fila de espera. Remova-os antes de remover este medico!");
+    	voltar_menu_medicos();
+	}
+	
+    FILE* arquivo = fopen("medicos.txt", "r");
+    FILE* arquivoTemp = fopen("temp.txt", "w");
+    Medico medico;
+    while (fscanf(arquivo, "%[^,],%d\n", medico.nome, &medico.codigo) == 2)
+    {
+        if (strcmp(medico.nome, string) == 0)
+        {
+        	encontrou = 1;
+			printf("Novo Nome: ");
+			fflush(stdin);
+			gets(string2);
+			strcpy(medico.nome, string2);
+		    fprintf(arquivoTemp, "%s,%d\n", medico.nome, medico.codigo);
+        }
+        else
+        {
+            fprintf(arquivoTemp, "%s,%d\n", medico.nome, medico.codigo);
+        }
+    }
+    fclose(arquivo);
+    fclose(arquivoTemp);
+    remove("medicos.txt");
+    rename("temp.txt", "medicos.txt");
+    
+    if(encontrou == 0){
+    	printf("\nNao foi possivel encontrar esse Medico!");
+	}else{
+    	printf("\nUtente editado com sucesso!");
+	}
+		voltar_menu_medicos();
 }

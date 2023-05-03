@@ -11,6 +11,12 @@
 #include "base_dados.h"
 #include "fila.h"
 
+void voltar_menu_utentes(){
+	printf("\n\nPressione ENTER para continuar...");
+	getchar(); // aguarda a tecla ENTER ser pressionada
+	Menu_Utentes();
+}
+
 int VerificarNomeUtente(char* nome){	
     FILE* arquivo = fopen("utentes.txt", "r");
     Utente utente;
@@ -37,9 +43,7 @@ void Criar_Utente(){
 	char** nomes_medicos = Nomes_Medicos("medicos.txt",&num); 
 	if(num == 0){
 		printf("Não há medicos registados!\nRegiste um medico primeiro!");
-		printf("\n\nPressione ENTER para continuar...");
-    	getchar(); // aguarda a tecla ENTER ser pressionada
-		Menu_Utentes();
+		voltar_menu_utentes();
 	} 
 	
 	printf("Registo de Utente: \n");
@@ -47,9 +51,7 @@ void Criar_Utente(){
 	gets(nome);
 	if(VerificarNomeUtente(nome) == 1){
 		printf("Ja existe um utente chamado \"%s\"",nome);
-		printf("\n\nPressione ENTER para continuar...");
-    	getchar(); // aguarda a tecla ENTER ser pressionada
-		Menu_Utentes();
+		voltar_menu_utentes();
 	}
 
 	Utente utente;
@@ -91,10 +93,7 @@ void Criar_Utente(){
     free(nomes_medicos);
     printf("\n\nInformações sobre o Utente:");
     printf("\n%s | %d | %d", utente.nome, utente.codigo, utente.codigo_medico);
-    printf("\n\nPressione ENTER para continuar...");
-    getchar(); // aguarda a tecla ENTER ser pressionada
-    
-    Menu_Utentes();
+    voltar_menu_utentes();
 }
 
 void Consultar_Utente(){
@@ -119,6 +118,12 @@ void Consultar_Utente(){
 				int cod_medico = atoi(codigo_medico);
 		        if(cod_medico==cod_medico_utente){
 		        	printf("\nUtente: %s, Codigo: %d\nMedico: %s, Codigo: %d", nome_utente, codigo_utente, nome_medico, cod_medico);
+		        	int cod_utente = Codigo_Utente(nome_utente);
+					if(Utente_Esta_Na_Fila_De_Espera(cod_utente) == 1){
+						printf("\n\nEste utente esta na fila de espera!");
+					}else{
+						printf("\n\nEste utente nao esta na fila de espera!");
+					}
 					break;
 				}
 		    }
@@ -126,9 +131,25 @@ void Consultar_Utente(){
     }
     fclose(arquivo);
 	fclose(arquivo2);
-    printf("\n\nPressione ENTER para continuar...");
-    getchar(); // aguarda a tecla ENTER ser pressionada
-    Menu_Utentes();
+    voltar_menu_utentes();
+}
+
+int Codigo_Utente(char* Nome_Utente) {
+    FILE* arquivo = fopen("utentes.txt", "r");
+
+    char linha[100];
+    while (fgets(linha, 100, arquivo) != NULL) {
+        char* nome_utente = strtok(linha, ",");
+        char* codigo_utente = strtok(NULL, ",");
+        char* codigo_medico = strtok(NULL, "\n");
+        if (strcmp(nome_utente, Nome_Utente) == 0) {
+            int cod_utente = atoi(codigo_utente);
+            fclose(arquivo);
+            return cod_utente;
+        }
+    }
+    fclose(arquivo);
+    return -1;
 }
 
 void Remover_Utente(){
@@ -136,6 +157,12 @@ void Remover_Utente(){
 	char nome[255];
 	printf("Nome do Utente de deseja remover: ");
 	gets(nome);
+	
+	int cod_utente = Codigo_Utente(nome);
+	if(Utente_Esta_Na_Fila_De_Espera(cod_utente) == 1){
+		printf("\nEste utente esta na fila de espera, remova-o da fila antes de poder remover!");
+    	voltar_menu_utentes();
+	}
 	
 	printf("Tem certeza que deseja remover o medico %s? (S/N)\n", nome);
     char resposta = getchar();
@@ -151,9 +178,7 @@ void Remover_Utente(){
         printf("Operacao cancelada pelo usuario!\n");
     }
     
-    printf("\n\nPressione ENTER para continuar...");
-    getchar(); // aguarda a tecla ENTER ser pressionada
-    Menu_Utentes();
+    voltar_menu_utentes();
 }
 
 void Listar_Utentes(){
@@ -170,9 +195,7 @@ void Listar_Utentes(){
         printf("\nNome: %s, Codigo: %d", nome, num_int);
     }
     fclose(arquivo);
-    printf("\n\nPressione ENTER para continuar...");
-    getchar(); // aguarda a tecla ENTER ser pressionada
-    Menu_Utentes();
+    voltar_menu_utentes();
 }
 
 char** Verificar_Medico(int* num){
@@ -219,4 +242,96 @@ char** Verificar_Medico(int* num){
     fclose(arquivo2);
     
     return nomes;
+}
+
+void Editar_Utente(){
+	system("CLS");
+	char string[255], string2[255],medico[255];
+	int encontrou = 0;
+	printf("Nome do Utente que quer editar: ");
+	fflush(stdin);
+	gets(string);
+	
+	int cod_utente = Codigo_Utente(string);
+	if(Utente_Esta_Na_Fila_De_Espera(cod_utente) == 1){
+		printf("\nEste utente esta na fila de espera, remova-o da fila antes de poder editar!");
+    	voltar_menu_utentes();
+	}
+	
+    FILE* arquivo = fopen("utentes.txt", "r");
+    FILE* arquivoTemp = fopen("temp.txt", "w");
+    Utente utente;
+    while (fscanf(arquivo, "%[^,],%d,%d\n", utente.nome, &utente.codigo, &utente.codigo_medico) == 3)
+    {
+    	/*
+		Encontramos o utente no ficheiro pelo nome do mesmo e nao copiamos para
+		o ficheiro temporario, pois vamos alterar as informações como nome ou medico
+		de familia e so depois é que passamos para o ficheiro temporario que ira 
+		substituir o ficheiro utentes.txt
+		*/
+        if (strcmp(utente.nome, string) == 0)
+        {
+        	encontrou = 1;
+			printf("Novo Nome: ");
+			fflush(stdin);
+			gets(string2);
+            int num,i;
+			char** nomes_medicos = Nomes_Medicos("medicos.txt",&num);     
+		    int opcao = 1;
+		    int tecla;
+		    while (1) {
+		    	system("CLS");
+		        printf("Qual é o medico de %s\n\n",string);
+			    printf("%s  Manter o mesmo Medico\n", opcao == num+1 ? ">": " ");
+		        for (i = 0; i < num; i++) {
+			        printf("%s  %s\n", opcao == i+1 ? ">": " ", nomes_medicos[i]);
+			    }
+		
+		        tecla = getch();
+		
+		        if (tecla == 224) {
+		            tecla = getch(); 
+		
+		            switch (tecla) {
+		                case 72: 
+		                    opcao = opcao == 1 ? num+1 : opcao - 1;
+		                    break;
+		                case 80: 
+		                    opcao = opcao == num+1 ? 1 : opcao + 1;
+		                    break;
+		            }
+		        } else if (tecla == 13) {
+		        	if(opcao!=(num+1)){
+		        		strcpy(medico, nomes_medicos[opcao-1]);
+		        		int cod_medico = Codigo_Medico(medico);
+				    	utente.codigo_medico = cod_medico;
+					}
+					for (i = 0; i < num; i++) {
+				        free(nomes_medicos[i]);
+				    }
+				    free(nomes_medicos);
+				    
+				    strcpy(utente.nome, string2);
+				    //printf("%s | %d | %d", utente.nome, utente.codigo, utente.codigo_medico);
+				    fprintf(arquivoTemp, "%s,%d,%d\n", utente.nome, utente.codigo, utente.codigo_medico);
+		            break;
+		        }
+		    }
+        }
+        else
+        {
+            fprintf(arquivoTemp, "%s,%d,%d\n", utente.nome, utente.codigo, utente.codigo_medico);
+        }
+    }
+    fclose(arquivo);
+    fclose(arquivoTemp);
+    remove("utentes.txt");
+    rename("temp.txt", "utentes.txt");
+    
+    if(encontrou == 0){
+    	printf("\nNao foi possivel encontrar esse Utente!");
+	}else{
+    	printf("\nUtente editado com sucesso!");
+	}
+    voltar_menu_utentes();
 }

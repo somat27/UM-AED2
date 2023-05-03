@@ -13,7 +13,7 @@
 
 Medico *medicos = NULL;
 
-void voltar_menu(){
+void voltar_menu_fila(){
 	printf("\n\nPressione ENTER para continuar...");
 	getchar(); // aguarda a tecla ENTER ser pressionada
 	Menu_Atendimento();
@@ -41,6 +41,37 @@ Medico* Encontrar_Medico_Com_Mais_Utentes_Espera(int *qtdutentes) {
     }
     *qtdutentes = maxUtentesEspera;
     return medicoComMaisUtentesEspera;
+}
+
+int Utente_Esta_Na_Fila_De_Espera(int codigoUtente) {
+    Medico* atualMedico = medicos;
+    while (atualMedico != NULL) {
+        Utente* atualUtente = atualMedico->fila_espera;
+        while (atualUtente != NULL) {
+            if (atualUtente->codigo == codigoUtente) {
+                return 1;
+            }
+            atualUtente = atualUtente->proximo;
+        }
+        atualMedico = atualMedico->proximo;
+    }
+    return 0;
+}
+
+int Verificar_Fila_Espera_Medico(int codigoMedico) {
+    Medico* atualMedico = medicos;
+    while (atualMedico != NULL) {
+        if (atualMedico->codigo == codigoMedico) {
+            Utente* atualUtente = atualMedico->fila_espera;
+            if (atualUtente == NULL) {
+                return 0; // não há utentes na fila de espera do médico
+            } else {
+                return 1; // há utentes na fila de espera do médico
+            }
+        }
+        atualMedico = atualMedico->proximo;
+    }
+    return -1; // o médico com o código fornecido não foi encontrado
 }
 
 void Menu_Atendimento(){
@@ -119,6 +150,7 @@ void Criar_Medico_Apontador(int i, char *linha){
 void Colocar_Utente_Fila_Espera(char *string, Utente *utente){
 	Utente* novoUtenteFila = malloc(sizeof(Utente));
 	novoUtenteFila->codigo = utente->codigo;
+	novoUtenteFila->codigo_medico = utente->codigo_medico;
 	strcpy(novoUtenteFila->nome, utente->nome);
 	novoUtenteFila->proximo = NULL;	
 	
@@ -176,10 +208,10 @@ void Menu_Fila(){
 		}
 		fclose(arquivo);
 		fclose(arquivo2);
-		voltar_menu();
+		voltar_menu_fila();
 	} else {
 		printf("Utente nao encontrado!");
-		voltar_menu();
+		voltar_menu_fila();
 	}
 }
 
@@ -246,7 +278,7 @@ void Menu_Lista_Medico() {
         free(nomes_medicos[i]);
     }
     free(nomes_medicos);
-	voltar_menu();
+	voltar_menu_fila();
 }
 
 void Remover_Primeiro_Utente_Fila_Espera(Medico *medico) {
@@ -317,6 +349,6 @@ void Menu_Remover_Lista_Medico() {
         free(nomes_medicos[i]);
     }
     free(nomes_medicos);
-	voltar_menu();
+	voltar_menu_fila();
 }
 

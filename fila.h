@@ -5,3 +5,5 @@ void Menu_Lista_Medico();
 void Remover_Primeiro_Utente_Fila_Espera();
 void Menu_Remover_Lista_Medico();
 void removerUltimoUtente();
+int Utente_Esta_Na_Fila_De_Espera();
+int Verificar_Fila_Espera_Medico();

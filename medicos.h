@@ -5,3 +5,4 @@ void Criar_Medico();
 void Consultar_Medico();
 void Remover_Medico();
 void Listar_Medicos();
+void Editar_Medico();

@@ -21,6 +21,9 @@ Lista Para Fazer:
     // DONE (somat#0#): Listar todos os utentes ordenados por medico.
     // DONE (somat#0#): Colocar um aviso para quando a fila de espera esta vazia
     // DONE (somat#0#): Fazer um verificacao para ver se esse utente ja esta na fila de espera
-    // TODO (somat#0#): Fazer validações no codigo, testes
+    // TODO (somat#0#): Fazer validacoes no codigo, testes
     // TODO (somat#0#): Colocar o codigo elegivel, conseguir ler o codigo
     // TODO (somat#0#): Colocar comentarios
+	// DONE (somat#0#): Colocar verificacao antes de editar/remover um utente para ver se ele esta na fila de espera ou nao
+	// DONE (somat#0#): Colocar informacao no consultar utente para dizer se ele esta na fila de espera ou nao
+	// DONE (somat#0#): Colocar verificacao antes de editar/remover um medico para ver se ele tem gente na fila de espera
