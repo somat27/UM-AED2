@@ -185,17 +185,29 @@ void Remover_Utente(){
 void Listar_Utentes(){
 	system("CLS");
 	printf("Lista de Utentes registados: \n");
-	char linha[100];
+	char linha[100],linha2[100];
     int i = 0;
     FILE* arquivo = fopen("utentes.txt", "r");
-    while (fgets(linha, 100, arquivo) != NULL) {
-        char* nome = strtok(linha, ",");
-        char* codigo_str = strtok(NULL, ",");
-        char* num_str = strtok(codigo_str, "\n");
-		int num_int = atoi(num_str);
-        printf("\nNome: %s, Codigo: %d", nome, num_int);
-    }
+    FILE* arquivo2 = fopen("medicos.txt", "r");
+    while (fgets(linha2, 100, arquivo2) != NULL){
+        char* nome_medico = strtok(linha2, ",");
+        char* codigo_medico = strtok(NULL, "\n");
+        int cod_medico = atoi(codigo_medico);
+        printf("\nMedico: %s", nome_medico);
+    	while (fgets(linha, 100, arquivo) != NULL) {
+	        char* nome_utente = strtok(linha, ",");
+	        char* codigo_utente = strtok(NULL, ",");
+	        char* codigo_medico_utente = strtok(NULL, "\n");
+			int cod_utente = atoi(codigo_utente);
+			int cod_medico_utente = atoi(codigo_medico_utente);
+			if(cod_medico == cod_medico_utente){
+				printf("\n\tUtente: %s, Codigo: %d", nome_utente, cod_utente);
+			}
+	    }
+	    rewind(arquivo);
+	}
     fclose(arquivo);
+    fclose(arquivo2);
     voltar_menu_utentes();
 }
 
