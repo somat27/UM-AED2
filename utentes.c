@@ -84,6 +84,9 @@ void Criar_Utente(){
 		    utente.codigo_medico = cod_medico;
 		    guardarBaseDadosUtente(&utente);
 		    
+		    Criar_Medico_Apontador(cod_medico, medico);
+		    Colocar_Utente_Fila_Espera(utente.nome, &utente);
+		    
             break;
         }
     }
@@ -91,8 +94,6 @@ void Criar_Utente(){
         free(nomes_medicos[i]);
     }
     free(nomes_medicos);
-    printf("\n\nInformações sobre o Utente:");
-    printf("\n%s | %d | %d", utente.nome, utente.codigo, utente.codigo_medico);
     voltar_menu_utentes();
 }
 
