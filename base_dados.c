@@ -12,7 +12,7 @@
 #include "fila.h"
 
 void guardarBaseDadosUtente(Utente* utente){
-    FILE* arquivo = fopen("utentes.txt", "a");
+    FILE* arquivo = fopen("utentes.txt", "a");		
     fprintf(arquivo, "%s,%d,%d\n", utente->nome,utente->codigo,utente->codigo_medico);
     fclose(arquivo);
 }
@@ -25,10 +25,7 @@ int RemoverUtente(char* nomeUtente){
     Utente utente;
 	while (fscanf(arquivo, "%[^,],%d,%d\n", utente.nome, &utente.codigo, &utente.codigo_medico) == 3) //O [^,] ï¿½ para ler uma string ate a proxima ','
     {
-    	/* 
-		Caso utente.nome seja diferente do nomeUtente entao copiamos as informações para 
-		o ficheiro temporario, se eles forem iguais entao nao copia para o ficheiro temporario
-		*/
+    	//envio de todos os utentes que não o escolhido para um ficheiro temporário
     	if (strcmp(utente.nome, nomeUtente) != 0){
             fprintf(arquivoTemp, "%s,%d,%d\n", utente.nome, utente.codigo, utente.codigo_medico);
         }else{
@@ -129,6 +126,7 @@ void Mudar_Medico_Utentes(char** nomes_utentes, char* nome_medico, int num_utent
     int cod_medico;
     Utente utente;
     
+	/*Procura no ficheiro médicos e quando encontra guarda o seu código */
     while (fgets(linha, 100, arquivo) != NULL) {
         char* string = strtok(linha, ",");
         char* codigo = strtok(NULL, "\n");
@@ -139,6 +137,8 @@ void Mudar_Medico_Utentes(char** nomes_utentes, char* nome_medico, int num_utent
     }
     fclose(arquivo);
     
+    /*Procura no ficheiro dos utentes se existe algum paciente com o código 
+		que guardamos em cima */
     while (fgets(linha2, 100, arquivo2) != NULL) {
     	encontrou = 0;
         char* nome_utente = strtok(linha2, ",");
@@ -152,7 +152,7 @@ void Mudar_Medico_Utentes(char** nomes_utentes, char* nome_medico, int num_utent
 			if(strcmp(nomes_utentes[i], nome_utente) == 0){
 				encontrou = 1;
 			}
-		}
+		}									//se encontrar troca os códigos
 		if(encontrou){
 			utente.codigo_medico = cod_medico;
 			fprintf(arquivoTemp, "%s,%d,%d\n", utente.nome, utente.codigo, utente.codigo_medico);
@@ -162,7 +162,7 @@ void Mudar_Medico_Utentes(char** nomes_utentes, char* nome_medico, int num_utent
 		}
 		
     }
-    
+    	//atuliza a informação trocando o nome dos arquivos
     fclose(arquivo2);
     fclose(arquivoTemp);
     remove("utentes.txt");

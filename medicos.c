@@ -17,6 +17,8 @@ void voltar_menu_medicos(){
 	Menu_Medicos();
 }
 
+
+//esta função retorna o valor 1 se encontrar o nome do médico nos ficheiros
 int VerificarNomeMedico(char* nome){	
     FILE* arquivo = fopen("medicos.txt", "r");
     Medico medico;
@@ -32,6 +34,7 @@ int VerificarNomeMedico(char* nome){
     return 0;	
 }
 
+//Esta função retorna um arrays de strings contendo o nome de todos os médicos no arquivo
 char** Nomes_Medicos(char* nome_arquivo, int* n_medicos) {
     FILE* arquivo = fopen("medicos.txt", "r");
     
@@ -50,16 +53,18 @@ char** Nomes_Medicos(char* nome_arquivo, int* n_medicos) {
     return nomes;
 }
 
+//
 int Codigo_Medico(char* Nome_Medico) {
     FILE* arquivo = fopen("medicos.txt", "r");
 
     char linha[100];
-    while (fgets(linha, 100, arquivo) != NULL) {
+    while (fgets(linha, 100, arquivo) != NULL) { //separa a linha do arquivo com uma virgula
         char* nome_medico = strtok(linha, ",");
         char* codigo_medico = strtok(NULL, "\n");
         if (strcmp(nome_medico, Nome_Medico) == 0) {
-            int cod_medico = atoi(codigo_medico);
-            fclose(arquivo);
+            int cod_medico = atoi(codigo_medico);	
+            //se encontrar o nome do médico nos fichieiros, tranforma o codigo numa string
+			fclose(arquivo);
             return cod_medico;
         }
     }
@@ -75,7 +80,7 @@ void Criar_Medico(){
 	printf("Nome do Medico: ");
 	fgets(nome, 255, stdin);
 	nome[strcspn(nome, "\n")] = '\0'; // remove a nova linha
-	if(VerificarNomeMedico(nome) == 1){
+	if(VerificarNomeMedico(nome) == 1){		//verifica se já existe um médico um o nome escolhido 
 		printf("Ja existe um medico chamado \"%s\"",nome);
 		voltar_menu_medicos();
 	}
@@ -83,9 +88,9 @@ void Criar_Medico(){
 	Medico medico;
 	strcpy(medico.nome, nome);
     medico.codigo = codigo;
-    guardarBaseDadosMedico(&medico);
+    guardarBaseDadosMedico(&medico); //guarda os dados em files
     printf("Medico criado com sucesso!");
-	voltar_menu_medicos();
+	voltar_menu_medicos(); 
 }
 
 void Consultar_Medico(){
@@ -105,6 +110,8 @@ void Consultar_Medico(){
         char* codigo_medico_arquivo = strtok(NULL, "\n");
 		int cod_medico_arquivo = atoi(codigo_medico_arquivo);
 		
+		/*Se encontrar o nome do médico nos arquivos 
+		lista o seu nome, código e a sua lista de Utentes*/
         if(strcmp(nome_medico, nome_medico_arquivo) == 0) {
         	printf("\n\nMedico: %s, Codigo: %d\nLista de Utentes:", nome_medico_arquivo, cod_medico_arquivo);
         	
@@ -135,6 +142,7 @@ void Consultar_Medico(){
 	voltar_menu_medicos();
 }
 
+//esta função permite ao utilizador eliminar um médico da base de dados de forma intuitiva
 void Remover_Medico(){
 	system("CLS");
 	char nome[255];
@@ -164,6 +172,7 @@ void Remover_Medico(){
 	voltar_menu_medicos();
 }
 
+//esta função lista o nome de todos os médicos guaradados no ficheiro "medicos.txt"
 void Listar_Medicos(){
 	system("CLS");
 	printf("Lista de Medicos registados: \n");
@@ -189,6 +198,7 @@ void Editar_Medico(){
 	gets(string);
 	
 	int cod_medico = Codigo_Medico(string);
+	//impossibilita a opção de editar médico caso este tenha utentes em fila de espera
 	if(Verificar_Fila_Espera_Medico(cod_medico) == 1){
 		printf("\nEste medico tem utentes na fila de espera. Remova-os antes de remover este medico!");
     	voltar_menu_medicos();
@@ -197,8 +207,9 @@ void Editar_Medico(){
     FILE* arquivo = fopen("medicos.txt", "r");
     FILE* arquivoTemp = fopen("temp.txt", "w");
     Medico medico;
+    //procura no arquivo o médico pesquisado
     while (fscanf(arquivo, "%[^,],%d\n", medico.nome, &medico.codigo) == 2)
-    {
+    {	//se encontrar pergunta ao utilizador um novo nome para o médico
         if (strcmp(medico.nome, string) == 0)
         {
         	encontrou = 1;
@@ -216,7 +227,7 @@ void Editar_Medico(){
     fclose(arquivo);
     fclose(arquivoTemp);
     remove("medicos.txt");
-    rename("temp.txt", "medicos.txt");
+    rename("temp.txt", "medicos.txt"); //tranforma o arquivo editado no "medicos.txt"
     
     if(encontrou == 0){
     	printf("\nNao foi possivel encontrar esse Medico!");

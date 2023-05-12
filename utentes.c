@@ -17,7 +17,7 @@ void voltar_menu_utentes(){
 	Menu_Utentes();
 }
 
-int VerificarNomeUtente(char* nome){	
+int VerificarNomeUtente(char* nome){	//percorre o ficheiro para verificar se aquele nome já existe
     FILE* arquivo = fopen("utentes.txt", "r");
     Utente utente;
     while (fscanf(arquivo, "%[^,],%d,%d\n", utente.nome, &utente.codigo, &utente.codigo_medico) == 3)
@@ -40,6 +40,9 @@ void Criar_Utente(){
     int opcao = 1;
     int tecla;
 	
+		/*Nomes_Medicos lê o arquivo "medicos.txt" 
+		e retorna um array de strings contendo os nomes 
+		dos médicos encontrados no arquivo.*/
 	char** nomes_medicos = Nomes_Medicos("medicos.txt",&num); 
 	if(num == 0){
 		printf("Não há medicos registados!\nRegiste um medico primeiro!");
@@ -58,7 +61,7 @@ void Criar_Utente(){
     while (1) {
     	system("CLS");
         printf("Qual é o medico de %s\n\n",nome);
-        for (i = 0; i < num; i++) {
+        for (i = 0; i < num; i++) {					//Listar Médicos 
 	        printf("%s  %s\n", opcao == i+1 ? ">": " ", nomes_medicos[i]);
 	    }
 
@@ -106,17 +109,24 @@ void Consultar_Utente(){
     int i = 0;
     FILE* arquivo = fopen("utentes.txt", "r");
 	FILE* arquivo2 = fopen("medicos.txt", "r");
+	
+	/* lê cada linha do arquivo um por um e armazena cada 
+	parte da linha como uma string usando a função "strtok"*/
     while (fgets(linha, 100, arquivo) != NULL) {
         char* nome_utente = strtok(linha, ",");
         char* codigo_utente = strtok(NULL, ",");
         char* codigo_medico_utente = strtok(NULL, "\n");
 		int cod_utente = atoi(codigo_utente);
 		int cod_medico_utente = atoi(codigo_medico_utente);
+		
+		/*se encontrar começa um loop a ler cada linha do 
+		arquivo2 e procurar pelo código do médico que atende ao paciente*/
         if(strcmp(string, nome_utente)==0){
 		    while (fgets(linha2, 100, arquivo2) != NULL) {
 		        char* nome_medico = strtok(linha2, ",");
 		        char* codigo_medico = strtok(NULL, "\n");
 				int cod_medico = atoi(codigo_medico);
+				//verifica se o código do médico lido corresponde ao código do médico que atende ao paciente
 		        if(cod_medico==cod_medico_utente){
 		        	printf("\nUtente: %s, Codigo: %d\nMedico: %s, Codigo: %d", nome_utente, codigo_utente, nome_medico, cod_medico);
 		        	int cod_utente = Codigo_Utente(nome_utente);
@@ -144,7 +154,7 @@ int Codigo_Utente(char* Nome_Utente) {
         char* codigo_utente = strtok(NULL, ",");
         char* codigo_medico = strtok(NULL, "\n");
         if (strcmp(nome_utente, Nome_Utente) == 0) {
-            int cod_utente = atoi(codigo_utente);
+            int cod_utente = atoi(codigo_utente); //converte a string num numero inteiro
             fclose(arquivo);
             return cod_utente;
         }
@@ -160,7 +170,8 @@ void Remover_Utente(){
 	gets(nome);
 	
 	int cod_utente = Codigo_Utente(nome);
-	if(Utente_Esta_Na_Fila_De_Espera(cod_utente) == 1){
+	//faz com que seja impossivel remover um paciente que esteja numa fila de espera
+	if(Utente_Esta_Na_Fila_De_Espera(cod_utente) == 1){	
 		printf("\nEste utente esta na fila de espera, remova-o da fila antes de poder remover!");
     	voltar_menu_utentes();
 	}
@@ -189,13 +200,18 @@ void Listar_Utentes(){
     int i = 0;
     FILE* arquivo = fopen("utentes.txt", "r");
     FILE* arquivo2 = fopen("medicos.txt", "r");
-    while (fgets(linha2, 100, arquivo2) != NULL){
-        char* nome_medico = strtok(linha2, ",");
+    while (fgets(linha2, 100, arquivo2) != NULL){ //verifica se os ficheiros abriram corretamente
+        
+		/*As informações do médico incluem seu nome e código, 
+		que são armazenados nas variáveis "nome_medico" e "codigo_medico*/
+		char* nome_medico = strtok(linha2, ",");
         char* codigo_medico = strtok(NULL, "\n");
         int cod_medico = atoi(codigo_medico);
         printf("\nMedico: %s", nome_medico);
     	while (fgets(linha, 100, arquivo) != NULL) {
-	        char* nome_utente = strtok(linha, ",");
+	       /*ome do paciente, código do paciente e código do médico que o atende são 
+		   armazenados nas variáveis "nome_utente", "codigo_utente" e "codigo_medico_utente"*/
+		    char* nome_utente = strtok(linha, ",");
 	        char* codigo_utente = strtok(NULL, ",");
 	        char* codigo_medico_utente = strtok(NULL, "\n");
 			int cod_utente = atoi(codigo_utente);
@@ -204,7 +220,7 @@ void Listar_Utentes(){
 				printf("\n\tUtente: %s, Codigo: %d", nome_utente, cod_utente);
 			}
 	    }
-	    rewind(arquivo);
+	    rewind(arquivo); //para que o loop possa ser executado novamente para o próximo médico
 	}
     fclose(arquivo);
     fclose(arquivo2);

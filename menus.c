@@ -24,13 +24,15 @@ void Menu_Principal(){
         printf("\t%s  Menu Medicos\n", opcao == 3 ? ">": " ");
         printf("\n\t%s  Fechar Programa\n", opcao == 4 ? ">": " ");
 
+		
+
         tecla = getch();
 
         if (tecla == 224) {
             tecla = getch();
 
             switch (tecla) {
-                case 72: 
+                case 72: 		 
                     opcao = opcao == 1 ? 4 : opcao - 1; 
                     break;
                 case 80: 

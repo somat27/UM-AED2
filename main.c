@@ -20,7 +20,7 @@ void criarFiles(){
 }
 
 int main(int argc, char *argv[]){
-    setlocale(LC_ALL, "Portuguese");
+    setlocale(LC_ALL, "Portuguese");  //Configuração regional para Português 
 
 	criarFiles();
 	Menu_Principal();

@@ -19,34 +19,40 @@ void voltar_menu_fila(){
 	Menu_Atendimento();
 }
 
+
+//Função retona o médico com mais utentes em fila de espera
 Medico* Encontrar_Medico_Com_Mais_Utentes_Espera(int *qtdutentes) {
     Medico* atualMedico = medicos;
     Medico* medicoComMaisUtentesEspera = NULL;
     int maxUtentesEspera = -1;
 	if(atualMedico == NULL){
-		return NULL;
+		return NULL;	//verifica se existem utentes na fila
 	}
     while (atualMedico != NULL) {
         Utente* atualUtente = atualMedico->fila_espera;
         int numUtentesEspera = 0;
-        while (atualUtente != NULL) {
+        while (atualUtente != NULL) {	//lopp de forma a contar
             numUtentesEspera++;
             atualUtente = atualUtente->proximo;
         }
-        if (numUtentesEspera > maxUtentesEspera) {
+        //verifica se há um novo médico com um máximo de utentes em fila de espera
+        if (numUtentesEspera > maxUtentesEspera) { 
             maxUtentesEspera = numUtentesEspera;
             medicoComMaisUtentesEspera = atualMedico;
         }
         atualMedico = atualMedico->proximo;
     }
-    *qtdutentes = maxUtentesEspera;
+    *qtdutentes = maxUtentesEspera;		
     return medicoComMaisUtentesEspera;
 }
 
+
+//Função que verfica se o utente está em fila de espera
 int Utente_Esta_Na_Fila_De_Espera(int codigoUtente) {
     Medico* atualMedico = medicos;
     while (atualMedico != NULL) {
         Utente* atualUtente = atualMedico->fila_espera;
+        //procura na fila se o utente já lá está inserido
         while (atualUtente != NULL) {
             if (atualUtente->codigo == codigoUtente) {
                 return 1;
@@ -158,16 +164,19 @@ void Colocar_Utente_Fila_Espera(char *string, Utente *utente){
 	while (atualMedico != NULL) {
 	    if (atualMedico->codigo == utente->codigo_medico) {
 	        Utente* atualUtente = atualMedico->fila_espera;
-	        if (atualUtente == NULL) {
+	        /*Caso seja o primeiro utente é adicionado diretamente á fila de espera*/
+	        if (atualUtente == NULL) { 
 	            atualMedico->fila_espera = novoUtenteFila;
 				printf("\n%s foi adicionado a lista de espera de %s\n", string, atualMedico->nome);
 	        } else {
-	            while (atualUtente != NULL) {
+	            while (atualUtente != NULL) {	//verfica se o utente já esta na fila
 				    if (atualUtente->codigo == novoUtenteFila->codigo) {
 				        printf("\nEsse utente ja se encontra na fila de espera!");
 				        break;
 				    }
-				    if (atualUtente->proximo == NULL) {
+				    /*Caso não esteja e a fila de espera ja tenha um utente, 
+					adiciona-o de forma a ficar na próxima posição da fila */
+				    if (atualUtente->proximo == NULL) {	
 				        atualUtente->proximo = novoUtenteFila;
 				        printf("\n%s foi adicionado a lista de espera de %s\n", string, atualMedico->nome);	
 				        break;
@@ -195,10 +204,13 @@ void Menu_Fila(){
 		int i = 0;
 		FILE* arquivo = fopen("utentes.txt", "r");
 		FILE* arquivo2 = fopen("medicos.txt", "r");
+		
+		//verifica se o utente procurado está nos files
 		while (fscanf(arquivo, "%[^,],%d,%d\n", utente.nome, &utente.codigo, &utente.codigo_medico) == 3) {
 			if (strcmp(string, utente.nome) == 0) {
+				//caso esteja procura o seu médico
 				while (fscanf(arquivo2, "%[^,],%d\n", linha, &i) == 2) {
-					if (i == utente.codigo_medico) {
+					if (i == utente.codigo_medico) { //quando encontrar adiciona á fila de espera
 						Criar_Medico_Apontador(i, linha);
 						Colocar_Utente_Fila_Espera(string, &utente);	
 						break;
@@ -220,7 +232,7 @@ void Menu_Lista_Medico() {
     int num, i, opcao = 0, tecla;
     char** nomes_medicos = Nomes_Medicos("medicos.txt", &num);
 
-    if (num == 0) {
+    if (num == 0) {	//verfica se já existem médicos registados
         printf("Não há médicos registrados! Registre um médico primeiro.");
         printf("\n\nPressione ENTER para continuar...");
     	getchar();
@@ -256,6 +268,7 @@ void Menu_Lista_Medico() {
 			    if(atualMedico->codigo == codigo_medico){
         			printf("Lista de espera do medico: %s\n\n", atualMedico->nome);
 			    	Utente* atualUtente = atualMedico->fila_espera;
+			    	//Lista todos os utentes organizados por médico
 				    while (atualUtente != NULL) {
 				        printf("\nNome: %s, Código: %d", atualUtente->nome, atualUtente->codigo);
 				        atualUtente = atualUtente->proximo;
@@ -288,6 +301,7 @@ void Remover_Primeiro_Utente_Fila_Espera(Medico *medico) {
         return;
     }
     medico->fila_espera = primeiroUtente->proximo;
+    //liberta a primeira posição da fila
     free(primeiroUtente);
     printf("Primeiro utente da fila de espera de %s removido.\n", medico->nome);
 }
@@ -332,8 +346,10 @@ void Menu_Remover_Lista_Medico() {
 		    while (atualMedico != NULL) {
 		        if (atualMedico->codigo == codigoMedico) {
 		        	if (atualMedico->fila_espera == NULL) {
-				        printf("Erro: Nao ha ninguem na fila de espera!\n"); //Nao esta a aparecer este erro?
+		        		//verifica se a fila de espera não está vazia
+				        printf("Erro: Nao ha ninguem na fila de espera!\n");
 				    }else{
+				    	//caso não esteja remove o primeiro utente da fila de espera
 		        		Remover_Primeiro_Utente_Fila_Espera(atualMedico);
 					}
 		            break;
@@ -351,4 +367,3 @@ void Menu_Remover_Lista_Medico() {
     free(nomes_medicos);
 	voltar_menu_fila();
 }
-
