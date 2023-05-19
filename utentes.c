@@ -32,6 +32,16 @@ int VerificarNomeUtente(char* nome){	//percorre o ficheiro para verificar se aqu
     return 0;	
 }
 
+int contemNumeros(char* str) {
+    while (*str) {
+        if (isdigit(*str)) {
+            return 1;
+        }
+        str++;
+    }
+    return 0;
+}
+
 void Criar_Utente(){
 	system("CLS");
 	char nome[255],medico[255];
@@ -55,6 +65,10 @@ void Criar_Utente(){
 	if(VerificarNomeUtente(nome) == 1){
 		printf("Ja existe um utente chamado \"%s\"",nome);
 		voltar_menu_utentes();
+	}
+	if(contemNumeros(nome)){
+		printf("Nome não pode conter numeros!");
+		voltar_menu_utentes();		
 	}
 
 	Utente utente;

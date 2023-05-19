@@ -1,4 +1,5 @@
 int VerificarNomeUtente(char* nome);
+int contemNumeros();
 void Criar_Utente();
 void Consultar_Utente();
 void Remover_Utente();

@@ -84,6 +84,10 @@ void Criar_Medico(){
 		printf("Ja existe um medico chamado \"%s\"",nome);
 		voltar_menu_medicos();
 	}
+	if(contemNumeros(nome)){
+		printf("Nome não pode conter numeros!");
+		voltar_menu_medicos();		
+	}
 	int codigo = Gerar_Codigo();	
 	Medico medico;
 	strcpy(medico.nome, nome);

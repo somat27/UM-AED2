@@ -152,7 +152,7 @@ void Mudar_Medico_Utentes(char** nomes_utentes, char* nome_medico, int num_utent
 			if(strcmp(nomes_utentes[i], nome_utente) == 0){
 				encontrou = 1;
 			}
-		}									//se encontrar troca os códigos
+		}//se encontrar troca os códigos
 		if(encontrou){
 			utente.codigo_medico = cod_medico;
 			fprintf(arquivoTemp, "%s,%d,%d\n", utente.nome, utente.codigo, utente.codigo_medico);
