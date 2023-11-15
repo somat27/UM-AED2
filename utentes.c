@@ -3,6 +3,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <conio.h>
+#include <ctype.h>
 
 #include "estruturas.h"
 #include "menus.h"
@@ -318,6 +319,10 @@ void Editar_Utente(){
 			printf("Novo Nome: ");
 			fflush(stdin);
 			gets(string2);
+			if(contemNumeros(string2)){
+				printf("Nome não pode conter numeros!");
+				voltar_menu_utentes();		
+			}
             int num,i;
 			char** nomes_medicos = Nomes_Medicos("medicos.txt",&num);     
 		    int opcao = 1;

@@ -220,6 +220,10 @@ void Editar_Medico(){
 			printf("Novo Nome: ");
 			fflush(stdin);
 			gets(string2);
+			if(contemNumeros(string2)){
+				printf("Nome não pode conter numeros!");
+				voltar_menu_medicos();		
+			}
 			strcpy(medico.nome, string2);
 		    fprintf(arquivoTemp, "%s,%d\n", medico.nome, medico.codigo);
         }
