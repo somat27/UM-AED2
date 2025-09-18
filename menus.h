@@ -1,7 +1,7 @@
-void Menu_Principal();
-void Sair_Programa();
+void Main_Menu();
+void Exit_Program();
 void ASCII_Print(int a);
-void Menu_Utentes();
-void Menu_Medicos();
-void Menu_Atendimento();
-void menuMudancaMedico();
+void Patients_Menu();
+void Doctors_Menu();
+void Attendance_Menu();
+void Doctor_Change_Menu();

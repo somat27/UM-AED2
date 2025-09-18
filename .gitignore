@@ -1,0 +1,27 @@
+# Build outputs / binaries
+SGAU.exe
+*.exe
+*.o
+*.obj
+*.res
+*.dll
+*.pdb
+*.map
+gmon.out
+report.txt
+SGAU.layout
+bin/
+obj/
+build/
+
+# Runtime data files
+utentes.txt
+medicos.txt
+temp.txt
+
+# IDE / editor
+.vscode/
+*.user
+*.log
+*.cache
+

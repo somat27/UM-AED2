@@ -5,25 +5,26 @@
 #include <unistd.h>
 #include <conio.h>
 
-#include "estruturas.h"
+#include "structures.h"
 #include "menus.h"
-#include "medicos.h"
-#include "utentes.h"
-#include "base_dados.h"
-#include "fila.h"
+#include "doctors.h"
+#include "patients.h"
+#include "database.h"
+#include "queue.h"
 
-void criarFiles(){
-	FILE* arquivo = fopen("medicos.txt", "a");
-	FILE* arquivo2 = fopen("utentes.txt", "a");
-	fclose(arquivo);
-	fclose(arquivo2);
+void createDataFiles(){
+    FILE* f1 = fopen("doctors.txt", "a");
+    FILE* f2 = fopen("patients.txt", "a");
+    if(f1) fclose(f1);
+    if(f2) fclose(f2);
 }
 
 int main(int argc, char *argv[]){
-    setlocale(LC_ALL, "Portuguese");  //Configuração regional para Português 
+    setlocale(LC_ALL, "");
 
-	criarFiles();
-	Menu_Principal();
+    createDataFiles();
+    Main_Menu();
 
     return 0;
 }
+

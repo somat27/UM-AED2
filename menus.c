@@ -3,58 +3,57 @@
 #include <time.h>
 #include <unistd.h>
 #include <conio.h>
+#include <string.h>
 
-#include "estruturas.h"
+#include "structures.h"
 #include "menus.h"
-#include "medicos.h"
-#include "utentes.h"
-#include "base_dados.h"
-#include "fila.h"
+#include "doctors.h"
+#include "patients.h"
+#include "database.h"
+#include "queue.h"
 
-void Menu_Principal(){    
+void Main_Menu(){    
     system("cls");
-    menuMudancaMedico();
+    Doctor_Change_Menu();
     
-	int opcao = 1;
-    int tecla;
+    int option = 1;
+    int key;
 
     while (1) {
         system("cls");
         ASCII_Print(1); 
         printf("\n\n");
-        printf("\t%s  Atendimento ao Utente\n", opcao == 1 ? ">": " ");
-        printf("\t%s  Menu Utentes\n", opcao == 2 ? ">": " ");
-        printf("\t%s  Menu Medicos\n", opcao == 3 ? ">": " ");
-        printf("\n\t%s  Fechar Programa\n", opcao == 4 ? ">": " ");
+        printf("\t%s  Patient Attendance\n", option == 1 ? ">": " ");
+        printf("\t%s  Patients Menu\n", option == 2 ? ">": " ");
+        printf("\t%s  Doctors Menu\n", option == 3 ? ">": " ");
+        printf("\n\t%s  Exit\n", option == 4 ? ">": " ");
 
-		
+        key = getch();
 
-        tecla = getch();
+        if (key == 224) {
+            key = getch();
 
-        if (tecla == 224) {
-            tecla = getch();
-
-            switch (tecla) {
-                case 72: 		 
-                    opcao = opcao == 1 ? 4 : opcao - 1; 
+            switch (key) {
+                case 72:
+                    option = option == 1 ? 4 : option - 1; 
                     break;
-                case 80: 
-                    opcao = opcao == 4 ? 1 : opcao + 1;
+                case 80:
+                    option = option == 4 ? 1 : option + 1;
                     break;
             }
-        } else if (tecla == 13) {
-        	switch (opcao) {
+        } else if (key == 13) {
+            switch (option) {
                 case 1:
-                    Menu_Atendimento(); 
+                    Attendance_Menu(); 
                     break;
                 case 2: 
-                    Menu_Utentes(); 
+                    Patients_Menu(); 
                     break;
                 case 3: 
-                    Menu_Medicos(); 
+                    Doctors_Menu(); 
                     break;
                 case 4: 
-                    Sair_Programa(); 
+                    Exit_Program(); 
                     break;
             }
             break;
@@ -62,188 +61,172 @@ void Menu_Principal(){
     }
 }
 
-void Sair_Programa(){   
-	exit(0);
+void Exit_Program(){   
+    exit(0);
 }
 
 void ASCII_Print(int a){
-	fflush(stdin);
-	printf("\n");
-	if(a==1){
-		printf("\n\t\t\t ¦¦¦¦¦¦¦  ¦¦¦¦¦¦   ¦¦¦¦¦  ¦¦    ¦¦");
-		printf("\n\t\t\t ¦¦      ¦¦       ¦¦   ¦¦ ¦¦    ¦¦");
-		printf("\n\t\t\t ¦¦¦¦¦¦¦ ¦¦   ¦¦¦ ¦¦¦¦¦¦¦ ¦¦    ¦¦");
-		printf("\n\t\t\t      ¦¦ ¦¦    ¦¦ ¦¦   ¦¦ ¦¦    ¦¦");
-		printf("\n\t\t\t ¦¦¦¦¦¦¦  ¦¦¦¦¦¦  ¦¦   ¦¦  ¦¦¦¦¦¦ ");
-		printf("\n\t\t    Sistema de Gestão e Atendimento aos Utentes.");
-	}else if(a==2){
-		printf("\n\t ¦¦    ¦¦ ¦¦¦¦¦¦¦¦ ¦¦¦¦¦¦¦ ¦¦¦    ¦¦ ¦¦¦¦¦¦¦¦ ¦¦¦¦¦¦¦ ¦¦¦¦¦¦¦ ");
-		printf("\n\t ¦¦    ¦¦    ¦¦    ¦¦      ¦¦¦¦   ¦¦    ¦¦    ¦¦      ¦¦      ");
-		printf("\n\t ¦¦    ¦¦    ¦¦    ¦¦¦¦¦   ¦¦ ¦¦  ¦¦    ¦¦    ¦¦¦¦¦   ¦¦¦¦¦¦¦ ");
-		printf("\n\t ¦¦    ¦¦    ¦¦    ¦¦      ¦¦  ¦¦ ¦¦    ¦¦    ¦¦           ¦¦ ");
-		printf("\n\t  ¦¦¦¦¦¦     ¦¦    ¦¦¦¦¦¦¦ ¦¦   ¦¦¦¦    ¦¦    ¦¦¦¦¦¦¦ ¦¦¦¦¦¦¦ ");
-    	printf("\n\t\t\t\t Menu Utentes");
-	}else if(a==3){
-		printf("\n\t     ¦¦¦    ¦¦¦ ¦¦¦¦¦¦¦ ¦¦¦¦¦¦  ¦¦  ¦¦¦¦¦¦  ¦¦¦¦¦¦  ¦¦¦¦¦¦¦ ");
-		printf("\n\t     ¦¦¦¦  ¦¦¦¦ ¦¦      ¦¦   ¦¦ ¦¦ ¦¦      ¦¦    ¦¦ ¦¦      ");
-		printf("\n\t     ¦¦ ¦¦¦¦ ¦¦ ¦¦¦¦¦   ¦¦   ¦¦ ¦¦ ¦¦      ¦¦    ¦¦ ¦¦¦¦¦¦¦ ");
-		printf("\n\t     ¦¦  ¦¦  ¦¦ ¦¦      ¦¦   ¦¦ ¦¦ ¦¦      ¦¦    ¦¦      ¦¦ ");
-		printf("\n\t     ¦¦      ¦¦ ¦¦¦¦¦¦¦ ¦¦¦¦¦¦  ¦¦  ¦¦¦¦¦¦  ¦¦¦¦¦¦  ¦¦¦¦¦¦¦ ");
-    	printf("\n\t\t\t\t Menu Medicos");
-	}
-	printf("\n");
+    fflush(stdin);
+    printf("\n");
+    if(a==1){
+        printf("\n\t\t\t  SGAU");
+        printf("\n\t  Health Center â€” Patients and Doctors Management");
+    }else if(a==2){
+        printf("\n\t  Patients Menu");
+    }else if(a==3){
+        printf("\n\t  Doctors Menu");
+    }
+    printf("\n");
 }
 
-void Menu_Utentes(){
-	int opcao=1,tecla;
+void Patients_Menu(){
+    int option=1, key;
 
     while (1) {
         system("cls");
         ASCII_Print(2);
         printf("\n\n");
-        printf("\t%s  Criar Utente\n", opcao == 1 ? ">": " ");
-        printf("\t%s  Editar Utente \n", opcao == 2 ? ">": " ");
-        printf("\t%s  Consultar Utente\n", opcao == 3 ? ">": " ");
-        printf("\t%s  Remover Utente\n", opcao == 4 ? ">": " ");
-        printf("\t%s  Listar Utentes\n", opcao == 5 ? ">": " ");
-        printf("\n\t%s  Menu Principal\n", opcao == 6 ? ">": " ");
+        printf("\t%s  Create Patient\n", option == 1 ? ">": " ");
+        printf("\t%s  Edit Patient \n", option == 2 ? ">": " ");
+        printf("\t%s  View Patient\n", option == 3 ? ">": " ");
+        printf("\t%s  Remove Patient\n", option == 4 ? ">": " ");
+        printf("\t%s  List Patients\n", option == 5 ? ">": " ");
+        printf("\n\t%s  Main Menu\n", option == 6 ? ">": " ");
 
-        tecla = getch();
-        if (tecla == 224) { 
-            tecla = getch();
-            switch (tecla) {
+        key = getch();
+        if (key == 224) { 
+            key = getch();
+            switch (key) {
                 case 72:
-                    opcao = opcao == 1 ? 6 : opcao - 1; 
+                    option = option == 1 ? 6 : option - 1; 
                     break;
                 case 80: 
-                    opcao = opcao == 6 ? 1 : opcao + 1;
+                    option = option == 6 ? 1 : option + 1;
                     break;
             }
-        } else if (tecla == 13) {
-            switch(opcao){
-            	case 1:
-            		Criar_Utente();
-            		break;
-            	case 2:
-            		Editar_Utente();
-            		break;
-            	case 3:
-            		Consultar_Utente();
-            		break;
-            	case 4:
-            		Remover_Utente();
-            		break;
-            	case 5:
-            		Listar_Utentes();
-            		break;
-            	case 6:
-            		Menu_Principal();
-            		break;
-			}
+        } else if (key == 13) {
+            switch(option){
+                case 1:
+                    Create_Patient();
+                    break;
+                case 2:
+                    Edit_Patient();
+                    break;
+                case 3:
+                    View_Patient();
+                    break;
+                case 4:
+                    Remove_Patient();
+                    break;
+                case 5:
+                    List_Patients();
+                    break;
+                case 6:
+                    Main_Menu();
+                    break;
+            }
             break;
         }
     }
 }
 
-void Menu_Medicos(){
-	int opcao = 1;
-    int tecla;
+void Doctors_Menu(){
+    int option = 1;
+    int key;
 
     while (1) {
         system("cls");
         ASCII_Print(3);
         printf("\n\n");
-        printf("\t%s  Criar Medico\n", opcao == 1 ? ">": " ");
-        printf("\t%s  Editar Medico \n", opcao == 2 ? ">": " ");
-        printf("\t%s  Consultar Medico\n", opcao == 3 ? ">": " ");
-        printf("\t%s  Remover Medico\n", opcao == 4 ? ">": " ");
-        printf("\t%s  Listar Medicos\n", opcao == 5 ? ">": " ");
-        printf("\n\t%s  Menu Principal\n", opcao == 6 ? ">": " ");
+        printf("\t%s  Create Doctor\n", option == 1 ? ">": " ");
+        printf("\t%s  Edit Doctor \n", option == 2 ? ">": " ");
+        printf("\t%s  View Doctor\n", option == 3 ? ">": " ");
+        printf("\t%s  Remove Doctor\n", option == 4 ? ">": " ");
+        printf("\t%s  List Doctors\n", option == 5 ? ">": " ");
+        printf("\n\t%s  Main Menu\n", option == 6 ? ">": " ");
 
-        tecla = getch();
-        if (tecla == 224) { 
-            tecla = getch();
-            switch (tecla) {
+        key = getch();
+        if (key == 224) { 
+            key = getch();
+            switch (key) {
                 case 72:
-                    opcao = opcao == 1 ? 6 : opcao - 1; 
+                    option = option == 1 ? 6 : option - 1; 
                     break;
                 case 80: 
-                    opcao = opcao == 6 ? 1 : opcao + 1;
+                    option = option == 6 ? 1 : option + 1;
                     break;
             }
-        } else if (tecla == 13) {
-            switch(opcao){
-            	case 1:
-            		Criar_Medico();
-            		break;
-            	case 2:
-            		Editar_Medico();
-            		break;
-            	case 3:
-            		Consultar_Medico();
-            		break;
-            	case 4:
-            		Remover_Medico();
-            		break;
-            	case 5:
-            		Listar_Medicos();
-            		break;
-            	case 6:
-            		Menu_Principal();
-            		break;
-			}
+        } else if (key == 13) {
+            switch(option){
+                case 1:
+                    Create_Doctor();
+                    break;
+                case 2:
+                    Edit_Doctor();
+                    break;
+                case 3:
+                    View_Doctor();
+                    break;
+                case 4:
+                    Remove_Doctor();
+                    break;
+                case 5:
+                    List_Doctors();
+                    break;
+                case 6:
+                    Main_Menu();
+                    break;
+            }
             break;
         }
     }
 }
 
-void menuMudancaMedico(){
-	int num,num2,i,opcao=1,tecla;
-    char** nomes_utentes = Verificar_Medico(&num);
-	if(num!=0){
-		printf("\nLista de Utentes com Medicos invalidos: ");
-		for(i=0;i<num;i++){
-			printf("\n%s", nomes_utentes[i]);
-		}
-		printf("\nEscolha um novo medico para estes utentes!");
-		printf("\n\nPressione ENTER para continuar...");
-    	getchar(); // aguarda a tecla ENTER ser pressionada
-		char** nomes_medicos = Nomes_Medicos("medicos.txt", &num2);
-		while (1) {
-	    	system("CLS");
-	        printf("Lista de medicos disponiveis: \n");
-	        for (i = 0; i < num2; i++) {
-		        printf("%s  %s\n", opcao == i+1 ? ">": " ", nomes_medicos[i]);
-		    }
-	
-	        tecla = getch();
-	
-	        if (tecla == 224) {
-	            tecla = getch(); 
-	
-	            switch (tecla) {
-	                case 72: 
-	                    opcao = opcao == 1 ? num2 : opcao - 1;
-	                    break;
-	                case 80: 
-	                    opcao = opcao == num2 ? 1 : opcao + 1;
-	                    break;
-	            }
-	        } else if (tecla == 13) {
-	        	printf("\nDEBUG: 1");
-	        	Mudar_Medico_Utentes(nomes_utentes, nomes_medicos[opcao-1], num);
-	        	printf("\nDEBUG: 2");
-	            break;
-	        }
-	    }
-		for (i = 0; i < num2; i++) {
-	        free(nomes_medicos[i]);
-	    }
-	    free(nomes_medicos);
-	}
-	for (i = 0; i < num; i++) {
-        free(nomes_utentes[i]);
+void Doctor_Change_Menu(){
+    int count, count_doctors, i, option=1, key;
+    char** names_invalid = Patients_With_Invalid_Doctor(&count);
+    if(count != 0){
+        printf("\nPatients with invalid doctor: ");
+        for(i=0;i<count;i++){
+            printf("\n%s", names_invalid[i]);
+        }
+        printf("\nChoose a new doctor for these patients!");
+        printf("\n\nPress ENTER to continue...");
+        getchar();
+        char** doctor_names = Doctor_Names("doctors.txt", &count_doctors);
+        while (1) {
+            system("CLS");
+            printf("Available doctors: \n");
+            for (i = 0; i < count_doctors; i++) {
+                printf("%s  %s\n", option == i+1 ? ">": " ", doctor_names[i]);
+            }
+
+            key = getch();
+
+            if (key == 224) {
+                key = getch(); 
+
+                switch (key) {
+                    case 72: 
+                        option = option == 1 ? count_doctors : option - 1;
+                        break;
+                    case 80: 
+                        option = option == count_doctors ? 1 : option + 1;
+                        break;
+                }
+            } else if (key == 13) {
+                Change_Patients_Doctor(names_invalid, doctor_names[option-1], count);
+                break;
+            }
+        }
+        for (i = 0; i < count_doctors; i++) {
+            free(doctor_names[i]);
+        }
+        free(doctor_names);
     }
-    free(nomes_utentes);
-	printf("\nDEBUG: 3");
+    for (i = 0; i < count; i++) {
+        free(names_invalid[i]);
+    }
+    free(names_invalid);
 }
+
